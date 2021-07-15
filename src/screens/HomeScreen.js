@@ -77,7 +77,7 @@ export default function HomeScreen() {
                   borderRadius: 34,
                 }}
               >
-                
+                {/* Place for Carousel Card */}
               </Animated.View>
             </View>
           );

@@ -11,16 +11,16 @@ function AppFormField({name,width, ...otherProps}) {
 const {setFieldValue,values, errors, setFieldTouched, touched} = useFormikContext() 
     return (
         <>
-         <AppTextInput
-                 onChangeText={(text)=>setFieldValue(name, text)}
-                 value={values[name]}
-                 onBlur={()=> setFieldTouched(name)}
-                 width={width}
-                 {...otherProps}
+            <AppTextInput
+                onChangeText={(text)=>setFieldValue(name, text)}
+                value={values[name]}
+                onBlur={()=> setFieldTouched(name)}
+                width={width}
+                {...otherProps}
 
-                 />
+            />
 
-                <ErrorMessage error={errors[name]} visible={touched[name]}/>
+            <ErrorMessage error={errors[name]} visible={touched[name]}/>
         </>
     );
 }

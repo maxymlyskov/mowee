@@ -6,11 +6,20 @@ import {
   Text,
   Image
 } from "react-native";
+import { useFonts } from 'expo-font';
 // import {Image} from 'react-native-expo-image-cache'
 
 import colors from "../config/colors";
 
 function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+  const [loaded] = useFonts({
+    BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf'),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
@@ -52,9 +61,9 @@ const styles = StyleSheet.create({
    
   },
   title: {
+    fontFamily: 'BebasNeueBold',
     marginBottom: 7,
-    fontWeight: 'bold',
-    fontSize:25,
+    fontSize: 30,
     color: colors.light, 
   },
 });

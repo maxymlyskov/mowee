@@ -33,33 +33,36 @@ const search = () =>{
     return (
         <Screen style={styles.container}>
             <AppForm
-                initialValues={{search: ''}}>                
-                    <AppFormField
-                        placeholder='Search movie'
-                        icon='movie-search'
-                        name='search'
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        value={state.s}
-                        onChangeText={text=>setState(prevState=>{
-                            return {...prevState, s: text}
-                        })}
-                        onSubmitEditing={search}
-                        />
+                initialValues={{search: ''}}
+            >                
+                <AppFormField
+                    placeholder='Search movie'
+                    icon='movie-search'
+                    name='search'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    value={state.s}
+                    onChangeText={text=>setState(prevState=>{
+                        return {...prevState, s: text}
+                    })}
+                    onSubmitEditing={search}
+                />
 
             </AppForm>            
-                <FlatList
-                    style={styles.results}
-                    data={state.results}
-                    keyExtractor={(item) => item.imdbID}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({item}) =><Card
-                                            title={item.Title}
-                                            subTitle={`Year ${item.Year}`}
-                                            imageUrl={item.Poster}
-                                            onPress={() => navigation.navigate('SearchDetails', item)}
-                                            />}
-                    keyboardShouldPersistTaps='always'
+            <FlatList
+                style={styles.results}
+                data={state.results}
+                keyExtractor={(item) => item.imdbID}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item}) =>
+                    <Card
+                        title={item.Title}
+                        subTitle={`Year ${item.Year}`}
+                        imageUrl={item.Poster}
+                        onPress={() => navigation.navigate('SearchDetails', item)}
+                    />
+                }
+                keyboardShouldPersistTaps='always'
             />
         </Screen>
     );
