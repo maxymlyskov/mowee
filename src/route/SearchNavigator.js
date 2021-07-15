@@ -5,11 +5,11 @@ import SearchDetailsScreen from "../screens/SearchDetailsScreen";
 
 const Stack = createStackNavigator();
 
-const SearchNavigator = () => (
+export default function SearchNavigator() {
+  return (
     <Stack.Navigator mode='modal' screenOptions={{headerShown: false, gestureEnabled: true}} >
       <Stack.Screen name='Search' component={SearchScreen}  />
       <Stack.Screen name='SearchDetails' component={SearchDetailsScreen} />
     </Stack.Navigator>
   );
-  
-  export default SearchNavigator;
+}
