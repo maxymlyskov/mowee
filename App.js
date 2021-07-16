@@ -4,17 +4,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SearchNavigator from './src/route/SearchNavigator';
 import HomeStack from './src/route/HomeStack';
+import {MaterialCommunityIcons} from '@expo/vector-icons'
+import colors from './src/config/colors';
+import TabNavigator from './src/route/TabNavigator'
+import LoginScreen from './src/screens/LoginScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
 
-const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      {/* <SearchNavigator/> */}
-      <Tab.Navigator>
-        <Tab.Screen name="HomeStack" component={HomeStack} />
-        <Tab.Screen name="SeachStack" component={SearchNavigator} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <TabNavigator/>
+    // <LoginScreen/>
   );
 }
