@@ -33,7 +33,7 @@ function SearchDetailsScreen({route}) {
         axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=480344f1&r=json').then(({ data }) => {
             let result = data;
             setLoading(false)
-    
+            console.log(data)
             setState(prevState => {
                 return { ...prevState, selected: result}
             })})

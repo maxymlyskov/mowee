@@ -24,7 +24,7 @@ function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
         {/* <Image style={styles.image} preview={{uri: thumbnailUrl}} uri={imageUrl} tint='light' /> */}
-        <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />
+        {imageUrl ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />: null}
         <View style={styles.detailsContainer}>
           <Text style={styles.title} numberOfLines={1}>
             {title}

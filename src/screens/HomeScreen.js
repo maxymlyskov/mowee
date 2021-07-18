@@ -1,94 +1,91 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, FlatList, Dimensions, StyleSheet, Animated, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, View} from 'react-native';
+import ActivityIndicator from '../components/ActivityIndicator'
+import AppButton from '../components/AppButton'
+import AppText from '../components/AppText'
+import Card from '../components/Card';
+import Screen from '../components/Screen'
 
-import ActivityIndicator from '../components/ActivityIndicator';
+import colors from '../config/colors';
+import moviesApi from '../api/movies';
+import useApi from '../hooks/useApi';
 
-const { width, height } = Dimensions.get('window');
 
-const SPACING = 10;
-const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.72 : width * 0.74;
-const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
-const BACKDROP_HEIGHT = height * 0.65;
+function HomeScreen({navigation}) {
 
-export default function HomeScreen() {
-  const [movies, setMovies] = React.useState([]);
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const movies = await getMovies();
-      // Add empty items to create fake space
-      // [empty_item, ...movies, empty_item]
-      setMovies([{ key: 'empty-left' }, ...movies, { key: 'empty-right' }]);
-    };
+  // getting data from the server
 
-    if (movies.length === 0) {
-      fetchData(movies);
-    }
-  }, [movies]);
+    const getMoviesApi = useApi(moviesApi.getMovies)
+    const [refreshing, setRefreshing] = useState(false)
 
-  if (movies.length === 0) {
-    return <ActivityIndicator visible='true'/>;
-  }
+    useEffect(()=>{
+        getMoviesApi.request()
+    }, [])
 
-  return (
-    <View style={styles.container}>
-      <Animated.FlatList 
-        showsHorizontalScrollIndicator={false}
-        data={movies}
-        keyExtractor={(item) => item.key}
-        horizontal
-        bounces={false}
-        decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
-        renderToHardwareTextureAndroid
-        contentContainerStyle={{ alignItems: 'center' }}
-        snapToInterval={ITEM_SIZE}
-        snapToAlignment='start'
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
-        )}
-        scrollEventThrottle={16}
-        renderItem={({ item, index }) => {
-          if (!item.poster) {
-            return <View style={{ width: EMPTY_ITEM_SIZE }} />;
+    const itemSeparatorComponent = () => {
+      return <View style = {
+          {
+              height: '100%',
+              width: 5,
+              backgroundColor: colors.halfdark,
           }
-
-          const inputRange = [
-            (index - 2) * ITEM_SIZE,
-            (index - 1) * ITEM_SIZE,
-            index * ITEM_SIZE,
-          ];
-
-          const translateY = scrollX.interpolate({
-            inputRange,
-            outputRange: [100, 50, 100],
-            extrapolate: 'clamp',
-          });
-
-          return (
-            <View style={{ width: ITEM_SIZE }}>
-              <Animated.View
-                style={{
-                  marginHorizontal: SPACING,
-                  padding: SPACING * 2,
-                  alignItems: 'center',
-                  transform: [{ translateY }],
-                  backgroundColor: 'white',
-                  borderRadius: 34,
-                }}
-              >
-                {/* Place for Carousel Card */}
-              </Animated.View>
+      }/>}
+   
+    
+    return (<>
+            <ActivityIndicator visible={getMoviesApi.loading}/>
+        <Screen style={styles.screen}>
+            {getMoviesApi.error &&
+            <>
+            <AppText>Couldn't retrieve the listings</AppText>
+            <AppButton title='Retry' onPress={getMoviesApi.request()}/>
+            </>}
+            <View style={styles.liked}>
+              <AppText style={styles.likedText}>Liked videos:</AppText>
             </View>
-          );
-        }}
-      />
-    </View>
-  );
+            <FlatList
+            data={getMoviesApi.data}
+            keyExtractor={(movie)=>movie._id}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={itemSeparatorComponent}
+            horizontal
+            style={styles.flatlist}
+            renderItem={({item})=><Screen style={styles.screen}>
+              <Card
+                title={item.Title}
+                subTitle = {'Year: ' + item.Year}
+                imageUrl={`http://192.168.0.106:4000/uploads/${item.Poster}`}
+                // 'http://192.168.0.106:4000/uploads/chair.jpg'
+                // {`http://192.168.0.106:4000/uploads/${item.Poster}`}
+                onPress={()=>console.log('works')}
+                                    />
+            </Screen>
+                                    }
+            onRefresh={()=>getMoviesApi.data}
+            refreshing={refreshing}
+            />
+            
+        </Screen>
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
+    screen:{
+        backgroundColor: colors.halfdark,
+    },
+    flatlist: {
+      height: 350,
+      backgroundColor: 'red',
+      flexGrow: 0},
+    liked:{
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    likedText:{
+      color: colors.light,
+      fontSize: 25
+    }
 })
+
+export default HomeScreen;
