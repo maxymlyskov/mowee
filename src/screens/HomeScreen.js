@@ -33,7 +33,7 @@ function HomeScreen({navigation}) {
    
     
     return (<>
-            <ActivityIndicator visible={getMoviesApi.loading}/>
+            <ActivityIndicator visible={getMoviesApi.loading }/>
         <Screen style={styles.screen}>
             {getMoviesApi.error &&
             <>
@@ -54,14 +54,13 @@ function HomeScreen({navigation}) {
               <Card
                 title={item.Title}
                 subTitle = {'Year: ' + item.Year}
-                imageUrl={`http://192.168.0.106:4000/uploads/${item.Poster}`}
-                // 'http://192.168.0.106:4000/uploads/chair.jpg'
+                imageUrl={item.Poster}
                 // {`http://192.168.0.106:4000/uploads/${item.Poster}`}
                 onPress={()=>console.log('works')}
                                     />
             </Screen>
                                     }
-            onRefresh={()=>getMoviesApi.data}
+            onRefresh={()=>getMoviesApi.request()}
             refreshing={refreshing}
             />
             
@@ -76,7 +75,6 @@ const styles = StyleSheet.create({
     },
     flatlist: {
       height: 350,
-      backgroundColor: 'red',
       flexGrow: 0},
     liked:{
       justifyContent: 'center',

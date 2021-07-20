@@ -3,6 +3,8 @@ import { StyleSheet, View, Image, ScrollView, TouchableWithoutFeedback, Modal, B
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
+import moviesApi from '../api/movies'
+import useApi from '../hooks/useApi';
 
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
@@ -10,6 +12,8 @@ import axios from 'axios';
 import colors from '../config/colors';
 import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
+import Like from '../components/LikeButton';
+import LikeButton from '../components/LikeButton';
 
 
 function SearchDetailsScreen({route}) {
@@ -52,6 +56,18 @@ function SearchDetailsScreen({route}) {
         return null;
     }
 
+    const selectedMovie = state.selected
+
+
+
+    const handleSubmit = async () =>{
+        const result = await moviesApi.addMovies(selectedMovie)
+        console.log(result.data)
+        if(!result.ok) return alert('Is not working!' + result )
+    }   
+        
+
+
     return (
         <>
 
@@ -65,6 +81,7 @@ function SearchDetailsScreen({route}) {
                                 {state.selected.Poster ? <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='cover' />: null}
                             </View>
                         </TouchableWithoutFeedback>
+                        <LikeButton onPress={handleSubmit}/>
                         <View style={styles.title}>
                             
                             <AppText style={styles.titleText}>{state.selected.Title}</AppText>

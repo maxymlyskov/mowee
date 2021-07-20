@@ -13,7 +13,7 @@ const addMovies = (movie, onUploadProgress) =>{
     data.append('Released', movie.Released);
     data.append('Runtime', movie.Runtime);
     data.append('Genre', movie.Genre);
-    data.append('Labguage', movie.Labguage);
+    data.append('Language', movie.Language);
     data.append('Country', movie.Country);
     data.append('Director', movie.Director);
     data.append('Writer', movie.Writer);
@@ -21,19 +21,14 @@ const addMovies = (movie, onUploadProgress) =>{
     data.append('Production', movie.Production);
     data.append('Awards', movie.Awards);
     data.append('Year', movie.Year);
-
-    movie.images.forEach((image, index) => {
-        data.append('images', {
-            name: 'image' + index,
-            type: 'image/jpeg',
-            uri: image
-        })
-        
-    });
+    data.append('Poster', movie.Poster)
     
-    return client.post(endpoint, data, {
-        onUploadProgress: progress => onUploadProgress(progress.loaded / progress.total)
-    })
+    
+    return client.post(endpoint, data
+    //     , {
+    //     onUploadProgress: progress => onUploadProgress(progress.loaded / progress.total)
+    // }
+    )
 }
 
 export default {
