@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import moviesApi from '../api/movies'
-import useApi from '../hooks/useApi';
 
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
@@ -58,16 +57,12 @@ function SearchDetailsScreen({route}) {
 
     const selectedMovie = state.selected
 
-
-
     const handleSubmit = async () =>{
         const result = await moviesApi.addMovies(selectedMovie)
-        console.log(result.data)
+        console.log(result)
         if(!result.ok) return alert('Is not working!' + result )
     }   
         
-
-
     return (
         <>
 

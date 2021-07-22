@@ -14,5 +14,6 @@ export default {
     blood: '#400e15',
     lightblue: '#524fc4',
     gold: '#f5ba18',
-    silver: '#C0C0C0'
+    silver: '#C0C0C0',
+    purple: '#421052'
 }

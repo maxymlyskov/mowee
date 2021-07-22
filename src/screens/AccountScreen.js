@@ -6,11 +6,26 @@ import ListItemSeparator from '../components/lists/ListItemSeparator';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 
+import moviesApi from '../api/movies';
+import useApi from '../hooks/useApi';
 
+
+// getting data from the server
+
+
+function AccountScreen() {
+    
+const getMoviesApi = useApi(moviesApi.getMovies)
+const [refreshing, setRefreshing] = React.useState(false)
+
+
+React.useEffect(()=>{
+    getMoviesApi.request()
+}, [])
 
 const menuItems=[
     {
-        title: 'Number of Liked movies: 0',
+        title: 'Number of Liked movies: ' + getMoviesApi.data.length,
         icon:{
             name: 'thumb-up',
             backgorundColor: colors.primary
@@ -23,8 +38,6 @@ const menuItems=[
         },
     }
 ]
-
-function AccountScreen() {
     return (
         <Screen style={styles.screen}>
             <View style={styles.container}>
@@ -39,6 +52,8 @@ function AccountScreen() {
                 data={menuItems}
                 keyExtractor={menuItem => menuItem.title}
                 ItemSeparatorComponent={ListItemSeparator}
+                onRefresh={()=>getMoviesApi.request()}
+                refreshing={refreshing}
                 renderItem={({item})=>(
                     <ListItem 
                     title={item.title}

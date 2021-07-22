@@ -56,7 +56,7 @@ function HomeScreen({navigation}) {
                 subTitle = {'Year: ' + item.Year}
                 imageUrl={item.Poster}
                 // {`http://192.168.0.106:4000/uploads/${item.Poster}`}
-                onPress={()=>console.log('works')}
+                onPress={() => navigation.navigate('HomeDetails', item)}
                                     />
             </Screen>
                                     }

@@ -24,14 +24,33 @@ const addMovies = (movie, onUploadProgress) =>{
     data.append('Poster', movie.Poster)
     
     
-    return client.post(endpoint, data
-    //     , {
-    //     onUploadProgress: progress => onUploadProgress(progress.loaded / progress.total)
-    // }
-    )
+    return client.post(endpoint, data)
+}
+
+const putMovies = (movie) =>{
+    
+    
+    return client.put('/movies/'+ movie._id, 
+        {"Rating": movie.Rating,
+        "Title": movie.Title,
+        "Year": movie.Year,
+        "imdbRating": movie.imdbRating,
+        "Plot": movie.Plot,
+        "Released": movie.Released,
+        "Runtime": movie.Runtime,
+        "Genre": movie.Genre,
+        "Language": movie.Language,
+        "Country": movie.Country,
+        "Director": movie.Director,
+        "Writer": movie.Writer,
+        "Actors": movie.Actors,
+        "Production": movie.Production,
+        "Awards": movie.Awards,
+        "Poster": movie.Poster})
 }
 
 export default {
     getMovies,
-    addMovies
+    addMovies,
+    putMovies
 }
