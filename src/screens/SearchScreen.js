@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, TextInput , Text, View, FlatList, Modal} from 'react-native';
+import { ScrollView, StyleSheet, TextInput , Text, View, FlatList, Modal, Button} from 'react-native';
 import AppForm from '../components/forms/AppForm';
 import AppFormField from '../components/forms/AppFormField';
 import axios from 'axios'
@@ -7,6 +7,9 @@ import Screen from '../components/Screen'
 import apikeys from '../config/apikeys';
 import colors from '../config/colors';
 import Card from '../components/Card'
+import AppButton from '../components/AppButton';
+import RandomCard from '../components/RandomCard';
+import RandomButton from '../components/RandomButton';
 
 function SearchScreen({navigation}) {
 
@@ -18,6 +21,17 @@ const [state, setState] = React.useState({
     selected: {}
 })
 
+const [randomS, setRandomS] = React.useState({
+    results: {},
+})
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const search = () =>{
     axios('http://www.omdbapi.com/?s='+ state.s +'&apikey=480344f1&r=json')
         .then(({data})=>{
@@ -28,6 +42,27 @@ const search = () =>{
             })
         })
 }
+
+const searchRandom = () =>{
+    axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=9be27fce').then((response) => {
+
+        if(response.data.Poster != "N/A" || response.data !== 'undefined'){
+        let results = response.data;
+        setRandomS(prevState=>{
+            return { ...prevState, results: results }
+        })
+        console.log(state.results)}
+        
+})}
+
+const [random, setRandom] = React.useState(false)
+const handleOpen = ()=> {
+    setRandom(true)
+    searchRandom()
+  };  
+const handleClose = ()=> {
+    setRandom(false)
+  }; 
 
 
     return (
@@ -64,6 +99,24 @@ const search = () =>{
                 }
                 keyboardShouldPersistTaps='always'
             />
+            {state.results == '' || state.results == undefined ? <View style={styles.randomButton}>
+
+                <RandomButton title='RANDOM MOVIE' onPress={handleOpen}/>
+                
+            </View>: null}
+            <Modal animationType='slide' transparent={true} visible={random === true}>
+
+                <RandomCard
+                            title={randomS.results.Title}
+                            subTitle={`Year ${randomS.results.Year}`}
+                            imageUrl={randomS.results.Poster}
+                            onPress={() => {navigation.navigate('SearchDetails', randomS.results); handleClose()}}
+                        />
+                <View style={styles.randomContainer}>
+                <RandomButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
+                <AppButton title='BACK' onPress={handleClose}/>
+                </View>
+            </Modal>
         </Screen>
     );
 }
@@ -80,6 +133,16 @@ const styles = StyleSheet.create({
     results:{
         flex: 1
     },
+    randomContainer: {
+        backgroundColor: colors.halfdark,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    randomButton:{
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 150
+    }
     
 })
 

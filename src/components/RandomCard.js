@@ -12,7 +12,7 @@ import { useFonts } from 'expo-font';
 
 import colors from "../config/colors";
 
-function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+function RandomCard({ title, subTitle, imageUrl, onPress }) {
   const [loaded] = useFonts({
     BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf'),
   });
@@ -24,9 +24,9 @@ function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.card}>
+      <View style={styles.RandomCard}>
         {/* <Image style={styles.image} preview={{uri: thumbnailUrl}} uri={imageUrl} tint='light' /> */}
-        {imageUrl ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />: null}
+        {imageUrl  ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />:null}
         <View style={styles.detailsContainer}>
           <Text style={styles.title} numberOfLines={1}>
             {title}
@@ -42,21 +42,21 @@ function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 15,
+  RandomCard: {
     backgroundColor: colors.darkblue,
     marginBottom: 10,
     overflow: "hidden",
     flex: 1
   },
+  
   detailsContainer: {
-    padding: 20,
+    padding: 15,
     justifyContent: 'center',
     alignItems: 'center'
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 350,
   },
   subTitle: {
     color: colors.medium,
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Card;
+export default RandomCard;

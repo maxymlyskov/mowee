@@ -10,11 +10,11 @@ import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
 
 
-// getting data from the server
 
 
 function AccountScreen() {
     
+// getting data from the server to show number of liked and rated movies
 const getMoviesApi = useApi(moviesApi.getMovies)
 const [refreshing, setRefreshing] = React.useState(false)
 
@@ -22,6 +22,16 @@ const [refreshing, setRefreshing] = React.useState(false)
 React.useEffect(()=>{
     getMoviesApi.request()
 }, [])
+
+// getting number of rated movies
+let ratedMovies = [];
+
+getMoviesApi.data.forEach((item)=>{
+    if(item.Rating !== 0) ratedMovies += item
+})
+
+const rated = ratedMovies.length/15
+
 
 const menuItems=[
     {
@@ -31,7 +41,7 @@ const menuItems=[
             backgorundColor: colors.primary
         },
     },
-    {   title: 'Number of Rated movies: 0',
+    {   title: 'Number of Rated movies: ' + rated,
     icon:{
             name: 'star-outline',
             backgorundColor: colors.gold

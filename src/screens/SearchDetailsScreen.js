@@ -16,12 +16,18 @@ import LikeButton from '../components/LikeButton';
 
 
 function SearchDetailsScreen({route}) {
+
+// setting states for searching
     const [state, setState] = React.useState({
         s: '',
         results: [],
         selected: {}
     })
+
+
+// setting states for loading
     const [loading, setLoading] = React.useState(false)
+// opening image in high quality
     const [image, setImage] = React.useState(false)
     const handleOpen = ()=> {
         setImage(true)
@@ -30,7 +36,7 @@ function SearchDetailsScreen({route}) {
         setImage(false)
       };  
 
-    // selecting movie by imdbID
+// selecting movie by imdbID
     const openPopup = id =>{
         setLoading(true)
         axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=480344f1&r=json').then(({ data }) => {
@@ -41,12 +47,22 @@ function SearchDetailsScreen({route}) {
                 return { ...prevState, selected: result}
             })})
     }
-
+// getting params from united stack screen 
     const searchBlock = route.params
-    React.useEffect(()=>{
-        openPopup(searchBlock.imdbID)
-    },[])
+    // setting variable from selected movie card
+    let selectedMovie = state.selected
 
+// logic for opening details of movie card depends what method of searching user will choose: random or common search
+    if(typeof(searchBlock) !== Object){
+        React.useEffect(()=>{
+            openPopup(searchBlock.imdbID)
+        },[])
+    }
+    else{
+        selectedMovie = searchBlock
+    }
+
+// loading fonts
     const [loaded] = useFonts({
         BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf')
     });
@@ -55,8 +71,7 @@ function SearchDetailsScreen({route}) {
         return null;
     }
 
-    const selectedMovie = state.selected
-
+// function for like button
     const handleSubmit = async () =>{
         const result = await moviesApi.addMovies(selectedMovie)
         console.log(result)
@@ -115,9 +130,7 @@ function SearchDetailsScreen({route}) {
                                 <AppText style={styles.genreText}>{state.selected.Awards}</AppText>
                             </View>           
                         </View>
-                        
-                    
-
+                                        
                         <Modal animationType='slide' visible={image === true} transparent={true}>
                 
                             <View style={styles.imageInfo}>
