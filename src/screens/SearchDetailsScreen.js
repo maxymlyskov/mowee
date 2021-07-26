@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, ScrollView, TouchableWithoutFeedback, Modal, Button } from 'react-native';
+import { StyleSheet, View, Image, ScrollView, TouchableWithoutFeedback, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
@@ -11,7 +11,6 @@ import axios from 'axios';
 import colors from '../config/colors';
 import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
-import Like from '../components/LikeButton';
 import LikeButton from '../components/LikeButton';
 
 
@@ -39,16 +38,16 @@ function SearchDetailsScreen({route}) {
 // selecting movie by imdbID
     const openPopup = id =>{
         setLoading(true)
-        axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=480344f1&r=json').then(({ data }) => {
+        axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=5657bf65&r=json').then(({ data }) => {
             let result = data;
             setLoading(false)
-            console.log(data)
             setState(prevState => {
                 return { ...prevState, selected: result}
             })})
     }
 // getting params from united stack screen 
     const searchBlock = route.params
+    console.log(searchBlock.imdbID)
     // setting variable from selected movie card
     let selectedMovie = state.selected
 
@@ -70,28 +69,25 @@ function SearchDetailsScreen({route}) {
     if (!loaded) {
         return null;
     }
-
-// function for like button
+    // function for like button
     const handleSubmit = async () =>{
-        const result = await moviesApi.addMovies(selectedMovie)
-        console.log(result)
+        const result = await moviesApi.addMoviesLiked(selectedMovie)
         if(!result.ok) return alert('Is not working!' + result )
     }   
-        
     return (
         <>
-
             <ActivityIndicator visible={loading}/>
 
             <View>
+
                 <ScrollView>
                     <Screen style={styles.container}>
-                        <TouchableWithoutFeedback onPress={handleOpen}>
+                        <TouchableWithoutFeedback onPress={()=>{handleOpen()}}>
                             <View>
                                 {state.selected.Poster ? <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='cover' />: null}
                             </View>
                         </TouchableWithoutFeedback>
-                        <LikeButton onPress={handleSubmit}/>
+                        <LikeButton form size={75} onPress={handleSubmit}/>
                         <View style={styles.title}>
                             
                             <AppText style={styles.titleText}>{state.selected.Title}</AppText>

@@ -12,21 +12,23 @@ import useApi from '../hooks/useApi';
 
 
 
-function AccountScreen() {
+function AccountScreen({navigation}) {
     
 // getting data from the server to show number of liked and rated movies
+const getMoviesLikedApi = useApi(moviesApi.getMoviesLiked)
 const getMoviesApi = useApi(moviesApi.getMovies)
 const [refreshing, setRefreshing] = React.useState(false)
 
 
 React.useEffect(()=>{
+    getMoviesLikedApi.request()
     getMoviesApi.request()
 }, [])
 
 // getting number of rated movies
 let ratedMovies = [];
 
-getMoviesApi.data.forEach((item)=>{
+getMoviesLikedApi.data.forEach((item)=>{
     if(item.Rating !== 0) ratedMovies += item
 })
 
@@ -34,18 +36,27 @@ const rated = ratedMovies.length/15
 
 
 const menuItems=[
+    {   title: 'Recently watched: ' + getMoviesApi.data.length,
+    icon:{
+            name: 'movie',
+            backgorundColor: colors.purple
+        },
+        targetScreen: 'Recently'
+    },
     {
-        title: 'Number of Liked movies: ' + getMoviesApi.data.length,
+        title: 'Liked movies: ' + getMoviesLikedApi.data.length,
         icon:{
             name: 'thumb-up',
             backgorundColor: colors.primary
         },
+        targetScreen: 'HomeScreen'
     },
     {   title: 'Number of Rated movies: ' + rated,
     icon:{
             name: 'star-outline',
             backgorundColor: colors.gold
         },
+        targetScreen: 'HomeScreen'
     }
 ]
     return (
@@ -62,7 +73,7 @@ const menuItems=[
                 data={menuItems}
                 keyExtractor={menuItem => menuItem.title}
                 ItemSeparatorComponent={ListItemSeparator}
-                onRefresh={()=>getMoviesApi.request()}
+                onRefresh={()=>getMoviesLikedApi.request()}
                 refreshing={refreshing}
                 renderItem={({item})=>(
                     <ListItem 
@@ -70,7 +81,7 @@ const menuItems=[
                     IconComponent={<Icon
                         name={item.icon.name}
                         backgroundColor={item.icon.backgorundColor} />}
-                    onPress={() => console.log('it works')}
+                    onPress={() => navigation.navigate(item.targetScreen)}
                     />
                 )}
                 />

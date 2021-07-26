@@ -14,7 +14,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 function HomeDetailsScreen({route}) {
+    // getting params from united stack screen
     const homeDetails = route.params
+    // states for rating and logic for opening and closing details
     const [rating, setRating] = React.useState(homeDetails.Rating);
     homeDetails.Rating = rating
     const [details, setDetails] = React.useState(false)
@@ -24,7 +26,9 @@ function HomeDetailsScreen({route}) {
     const handleClose = ()=> {
         setDetails(false)
       }; 
+    
 
+    // rating button function
     const handleSubmit = async () =>{
         const result = await moviesApi.putMovies(homeDetails)
         console.log(result)
@@ -32,6 +36,7 @@ function HomeDetailsScreen({route}) {
         alert('Rated succesfully!')
       
     }
+  
 
     return (
         <Screen style={styles.container}>
@@ -96,10 +101,9 @@ function HomeDetailsScreen({route}) {
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
 
                                 <AppButton onPress={handleClose} title='Go Back' />
-                            </View>
-                        
-                                
-                            </ScrollView>
+                            </View>                    
+                            
+                        </ScrollView>
                             </View>
 
                         </Modal>

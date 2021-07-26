@@ -4,12 +4,12 @@ import StarRating from 'react-native-star-rating-widget';
 
 function RatingStar(props) {
     const [rating, setRating] = React.useState(0);
-    console.log(rating.toString())
+    console.log(rating)
     return (
         <View style={styles.container}>
             <StarRating
-        rating={rating}
-        onChange={setRating}
+                rating={rating}
+                onChange={setRating}
       />
         </View>
     );

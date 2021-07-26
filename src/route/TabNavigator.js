@@ -2,10 +2,10 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SearchNavigator from './SearchNavigator';
-import InfoStack from './InfoStack';
 import HomeStack from './HomeStack';
 import {MaterialCommunityIcons} from '@expo/vector-icons'
 import colors from '../config/colors';
+import AccountNavigator from './AccountNavigator';
 
 
 
@@ -40,7 +40,7 @@ export default function TabNavigator() {
               name ='magnify'/>)}} />
         <Tab.Screen 
             name="Account" 
-            component={InfoStack}
+            component={AccountNavigator}
             options={{tabBarIcon:({color, size})=>(<MaterialCommunityIcons 
               size={size} 
               color={color} 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View} from 'react-native';
+import { Button, FlatList, StyleSheet, View} from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
@@ -9,15 +9,13 @@ import Screen from '../components/Screen'
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
-import LikeButton from '../components/LikeButton';
 
 
-function HomeScreen({navigation}) {
+function RecentlyScreen({navigation}) {
 
   // getting data from the server
 
-    const getMoviesApi = useApi(moviesApi.getMoviesLiked)
-    console.log(getMoviesApi)
+    const getMoviesApi = useApi(moviesApi.getMovies)
     const [refreshing, setRefreshing] = useState(false)
 
     useEffect(()=>{
@@ -32,12 +30,10 @@ function HomeScreen({navigation}) {
               backgroundColor: colors.halfdark,
           }
       }/>}
-    // function for like button (deleting)
-    const handleDelete = async (movie) =>{
-      const result = await moviesApi.deleteMovie(movie)
-      if(!result.ok) return alert('Is not working!' + result )
-      getMoviesApi.request()
-  } 
+    
+    const makeHorizontal = () =>{
+
+    }
     
     return (<>
             <ActivityIndicator visible={getMoviesApi.loading }/>
@@ -47,26 +43,17 @@ function HomeScreen({navigation}) {
             <AppText>Couldn't retrieve the listings</AppText>
             <AppButton title='Retry' onPress={getMoviesApi.request()}/>
             </>}
-            <View style={styles.liked}>
-              <AppText style={styles.likedText}>Liked videos:</AppText>
-            </View>
             <FlatList
             data={getMoviesApi.data}
             keyExtractor={(movie)=>movie._id}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={itemSeparatorComponent}
-            horizontal
-            style={styles.flatlist}
+            showsVerticalScrollIndicator={false}
             renderItem={({item})=><Screen style={styles.screen}>
               <Card
                 title={item.Title}
                 subTitle = {'Year: ' + item.Year}
                 imageUrl={item.Poster}
-                onPress={() => navigation.navigate('HomeDetails', item)}
+                onPress={() => navigation.navigate('SearchDetails', item)}
                                     />
-              <View style={styles.liked}>
-                <LikeButton size={35} form={!item.Liked} onPress={()=>handleDelete(item)}/>
-              </View>
             </Screen>
                                     }
             onRefresh={()=>getMoviesApi.request()}
@@ -81,18 +68,9 @@ function HomeScreen({navigation}) {
 const styles = StyleSheet.create({
     screen:{
         backgroundColor: colors.halfdark,
-    },
-    flatlist: {
-      height: 400,
-      flexGrow: 0},
-    liked:{
-      zIndex: 1,
-      bottom: 50
-    },
-    likedText:{
-      color: colors.light,
-      fontSize: 25
+        padding: 5, 
+
     }
 })
 
-export default HomeScreen;
+export default RecentlyScreen;

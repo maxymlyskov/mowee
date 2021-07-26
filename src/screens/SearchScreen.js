@@ -10,22 +10,30 @@ import Card from '../components/Card'
 import AppButton from '../components/AppButton';
 import RandomCard from '../components/RandomCard';
 import RandomButton from '../components/RandomButton';
+import RandomIndicator from '../components/RandomIndicator';
+import moviesApi from '../api/movies'
 
 function SearchScreen({navigation}) {
 
 const apiurl = apikeys.apiurlMax;
 
+// setting states for common searching 
 const [state, setState] = React.useState({
     s: '',
     results: [],
     selected: {}
 })
 
+// setting states for random searching 
+
 const [randomS, setRandomS] = React.useState({
     results: {},
 })
 
+// setting states for loading random
+const [loading, setLoading] = React.useState(false)
 
+// generating random numbers
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -33,39 +41,65 @@ function getRandomInt(min, max) {
 }
 
 const search = () =>{
-    axios('http://www.omdbapi.com/?s='+ state.s +'&apikey=480344f1&r=json')
+    axios('http://www.omdbapi.com/?s='+ state.s +'&apikey=5657bf65&r=json')
         .then(({data})=>{
             let results = data.Search;
-            console.log(results)
             setState(prevState=>{
-                return { ...prevState, results: results }
+                return { ...prevState, results: results}
             })
         })
 }
+const openPopup = id =>{
+    axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=6b3739ab&r=json').then(({ data }) => {
+        let result = data;
+        setState(prevState => {
+            return { ...prevState, selected: result}
+        })
+    })
+}
+
 
 const searchRandom = () =>{
-    axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=9be27fce').then((response) => {
+    
+    axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=6b3739ab').then((response) => {
 
-        if(response.data.Poster != "N/A" || response.data !== 'undefined'){
-        let results = response.data;
-        setRandomS(prevState=>{
-            return { ...prevState, results: results }
-        })
-        console.log(state.results)}
+        if(response.data.Poster !== "N/A" && response.data){
+            let results = response.data;
+            setRandomS(prevState=>{
+                return { ...prevState, results: results }
+        })}
+        else{
+            searchRandom()
+        }
         
-})}
+    })}
 
+// setting states for random button: opening, closing it and showing random indicator
 const [random, setRandom] = React.useState(false)
-const handleOpen = ()=> {
-    setRandom(true)
-    searchRandom()
+const handleOpen =  ()=> {
+    setLoading(true);
+    setTimeout(()=>{
+        setRandom(true)
+        searchRandom()
+        setTimeout(()=>setLoading(false),1000)
+    }, 2500)
   };  
 const handleClose = ()=> {
     setRandom(false)
   }; 
 
+  const handleSubmit = async (movie) =>{
+    const result = await moviesApi.addMovies(movie)
+    console.log(movie)
+    if(!result.ok) return alert('Is not working!' + result )
+} 
+ 
+
+
 
     return (
+        <>
+        <RandomIndicator visible={loading} />
         <Screen style={styles.container}>
             <AppForm
                 initialValues={{search: ''}}
@@ -94,17 +128,19 @@ const handleClose = ()=> {
                         title={item.Title}
                         subTitle={`Year ${item.Year}`}
                         imageUrl={item.Poster}
-                        onPress={() => navigation.navigate('SearchDetails', item)}
+                        onPress={() => {navigation.navigate('SearchDetails', item);
+                                        openPopup(item.imdbID)
+                                        handleSubmit(item)}}
                     />
                 }
                 keyboardShouldPersistTaps='always'
             />
             {state.results == '' || state.results == undefined ? <View style={styles.randomButton}>
 
-                <RandomButton title='RANDOM MOVIE' onPress={handleOpen}/>
+                <RandomButton title='RANDOM' onPress={handleOpen}/>
                 
             </View>: null}
-            <Modal animationType='slide' transparent={true} visible={random === true}>
+            <Modal animationType='fade' transparent={true} visible={random}>
 
                 <RandomCard
                             title={randomS.results.Title}
@@ -113,17 +149,18 @@ const handleClose = ()=> {
                             onPress={() => {navigation.navigate('SearchDetails', randomS.results); handleClose()}}
                         />
                 <View style={styles.randomContainer}>
-                <RandomButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
+                <AppButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
                 <AppButton title='BACK' onPress={handleClose}/>
                 </View>
             </Modal>
         </Screen>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     container:{
-        paddingTop: 50,
+        paddingTop: 45,
         paddingBottom: 10,
         paddingHorizontal: 15,
         flex: 1,
@@ -141,7 +178,7 @@ const styles = StyleSheet.create({
     randomButton:{
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 150
+        paddingBottom: 200
     }
     
 })

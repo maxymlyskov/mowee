@@ -4,26 +4,31 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from '../config/colors';
 
 
-function LikeButton({onPress}) {
-    const [like, setLike] = React.useState(false)
+function LikeButton({onPress, form, size}) {
+    let [like, setLike] = React.useState(false)
 
     const handleSubmitted = () =>{
         setLike(true)
     }
+// logic for form of button
+    let liked = null
+
+    if(form == true) liked = !like
+    else liked = like
 
     return (
         
         
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={()=>{onPress(); handleSubmitted()}}>
-                {!like ?
+                {liked ?
                 <MaterialCommunityIcons 
                     name={"heart-outline"}
-                    size={75}
+                    size={size}
                     color={colors.danger}/>:
                     <MaterialCommunityIcons 
                     name={"heart"}
-                    size={75}
+                    size={size}
                     color={colors.danger}/>
                     }
             </TouchableWithoutFeedback>
