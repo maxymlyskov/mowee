@@ -47,7 +47,6 @@ function SearchDetailsScreen({route}) {
     }
 // getting params from united stack screen 
     const searchBlock = route.params
-    console.log(searchBlock.imdbID)
     // setting variable from selected movie card
     let selectedMovie = state.selected
 
@@ -67,7 +66,7 @@ function SearchDetailsScreen({route}) {
     });
 
     if (!loaded) {
-        return null;
+        return null;    
     }
     // function for like button
     const handleSubmit = async () =>{

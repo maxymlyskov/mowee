@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
-import { StyleSheet, Image } from 'react-native';
+import React, { useState} from 'react';
+import { StyleSheet, Image, View } from 'react-native';
 import * as Yup from 'yup'
 import colors from '../config/colors'
+import authApi from '../api/auth'
+import useAuth from '../auth/useAuth'
 
 import Screen from '../components/Screen';
 import{ AppFormField, AppForm, ErrorMessage, SubmitButton } from '../components/forms'
+
 
 
 const validationSchema = Yup.object().shape({
@@ -15,17 +18,16 @@ const validationSchema = Yup.object().shape({
 
 function LoginScreen() {
 
-// const [loginFailed, setLoginFailed] = useState(false)
-// const auth = useAuth()
+const [loginFailed, setLoginFailed] = useState(false)
+const auth = useAuth()
 
-// const handleSubmit = async ({email, password})=>{
-//     const result = await authApi.login(email, password);
-//     if(!result.ok) return setLoginFailed(true)
-//     setLoginFailed(false)
-//     auth.logIn(result.data)
-    
 
-// }
+const handleSubmit = async ({email, password})=>{
+    const result = await authApi.login(email, password);
+    if(!result.ok) return setLoginFailed(true)
+    setLoginFailed(false)
+    auth.logIn(result.data)
+}
 
     return (
         <Screen style={styles.container}>
@@ -33,9 +35,9 @@ function LoginScreen() {
 
             <AppForm initialValues={{email:'', password:''}} 
             validationSchema={validationSchema} 
-            onSubmit={()=>console.log('Submitted')}>
+            onSubmit={handleSubmit}>
 
-            {/* <ErrorMessage visible={loginFailed} error="Invalid email or/and password"/> */}
+            <ErrorMessage visible={loginFailed} error="Invalid email or/and password"/>
 
              <AppFormField
             placeholder='Email'
@@ -52,8 +54,9 @@ function LoginScreen() {
            autoCapitalize='none' 
            autoCorrect={false} 
            secureTextEntry/>
-
-           <SubmitButton title='Login' />
+            <View style={styles.button}>
+                <SubmitButton title='Login' />
+            </View>
 
         </AppForm>
 
@@ -74,6 +77,9 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50
+    },
+    button:{
+        alignItems: 'center'
     }
 })
 

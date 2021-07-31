@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Icon from '../components/Icon';
 import ListItem from '../components/lists/ListItem';
@@ -8,7 +8,7 @@ import colors from '../config/colors';
 
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
-
+import useAuth from '../auth/useAuth'
 
 
 
@@ -17,9 +17,12 @@ function AccountScreen({navigation}) {
 // getting data from the server to show number of liked and rated movies
 const getMoviesLikedApi = useApi(moviesApi.getMoviesLiked)
 const getMoviesApi = useApi(moviesApi.getMovies)
-const [refreshing, setRefreshing] = React.useState(false)
+const [refreshing, setRefreshing] = useState(false)
 
+// getting the current user
+const {user, logOut} = useAuth()
 
+// requesting data from the server
 React.useEffect(()=>{
     getMoviesLikedApi.request()
     getMoviesApi.request()
@@ -33,6 +36,7 @@ getMoviesLikedApi.data.forEach((item)=>{
 })
 
 const rated = ratedMovies.length/15
+
 
 
 const menuItems=[
@@ -63,8 +67,8 @@ const menuItems=[
         <Screen style={styles.screen}>
             <View style={styles.container}>
             <ListItem
-                title="Maxym Lyskov"
-                subTitle="maxym@domain.com"
+                title={user.name}
+                subTitle={user.email}
                 image={require('../../assets/icon.png')}
             />
             </View>
@@ -93,7 +97,7 @@ const menuItems=[
                     title= 'Log Out'
                     name='logout'
                     backgroundColor={colors.blue} />}
-                onPress={()=> console.log('log out')} />
+                onPress={()=>logOut()} />
             </View>
         </Screen>
     );
