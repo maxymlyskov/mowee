@@ -16,17 +16,22 @@ import usersApi from '../api/users'
 const validationSchema = Yup.object().shape({
     name: Yup.string().required().label("Name"),
     email: Yup.string().required().email().label("Email"),
-    password: Yup.string().required().min(4).label("Password")
+    password: Yup.string().required().min(4).label("Password").matches(
+        /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+        "Password must contain at least 8 characters, one uppercase, one number and one special case character"
+      )
 })
 
 
 
 function RegisterScreen() {
+// setting auth variables
     const auth = useAuth()
     const registerApi = useApi(usersApi.register)
     const loginApi = useApi(authApi.login)
     const [error, setError] = useState()
 
+// register button fucntion
 const handleSubmit = async (userInfo) =>{
     const result = await registerApi.request(userInfo)
     console.log(result)
@@ -39,6 +44,7 @@ const handleSubmit = async (userInfo) =>{
     }
     return;
 }
+// login with registered user
 const {data: authToken} = await loginApi.request(
     userInfo.email,
     userInfo.password
@@ -55,33 +61,32 @@ const {data: authToken} = await loginApi.request(
             onSubmit={handleSubmit}>
                 <ErrorMessage visible={error} error={error}/>
                 <AppFormField
-            placeholder='Name'
-            icon='account'
-            name='name'
-            autoCapitalize='none'
-            autoCorrect={false}
-            />
-             <AppFormField
-            placeholder='Email'
-            icon='email'
-            name='email'
-            autoCapitalize='none'
-            autoCorrect={false}
-            />
+                    placeholder='Name'
+                    icon='account'
+                    name='name'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                />
+                <AppFormField
+                    placeholder='Email'
+                    icon='email'
+                    name='email'
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                />
 
-           <AppFormField 
-           placeholder='Password'
-           icon='lock'
-           name='password'
-           autoCapitalize='none' 
-           autoCorrect={false} 
-           secureTextEntry/>
+            <AppFormField 
+                placeholder='Password'
+                icon='lock'
+                name='password'
+                autoCapitalize='none' 
+                autoCorrect={false} 
+                secureTextEntry/>
             <View style={styles.button}>
                 <SubmitButton title='Register' />
             </View>
         </AppForm>
-        <Image style={styles.logo} source={require('../../assets/icon.png')} />
-
+            <Image style={styles.logo} source={require('../../assets/icon.png')} />
         </Screen>
         </>
     );

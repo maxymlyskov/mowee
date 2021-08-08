@@ -13,8 +13,7 @@ import useApi from '../hooks/useApi';
 
 function RecentlyScreen({navigation}) {
 
-  // getting data from the server
-
+  // getting recently viewed movies from the server
     const getMoviesApi = useApi(moviesApi.getMovies)
     const [refreshing, setRefreshing] = useState(false)
 
@@ -22,18 +21,6 @@ function RecentlyScreen({navigation}) {
         getMoviesApi.request()
     }, [])
 
-    const itemSeparatorComponent = () => {
-      return <View style = {
-          {
-              height: '100%',
-              width: 5,
-              backgroundColor: colors.halfdark,
-          }
-      }/>}
-    
-    const makeHorizontal = () =>{
-
-    }
     
     return (<>
             <ActivityIndicator visible={getMoviesApi.loading }/>
@@ -69,7 +56,6 @@ const styles = StyleSheet.create({
     screen:{
         backgroundColor: colors.halfdark,
         padding: 5, 
-
     }
 })
 

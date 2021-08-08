@@ -14,12 +14,9 @@ import RandomIndicator from '../components/RandomIndicator';
 import moviesApi from '../api/movies'
 import Icon from '../components/Icon';
 import AppTextInput from '../components/AppTextInput';
-import AppText from '../components/AppText';
 
 
 function SearchScreen({navigation}) {
-
-const apiurl = apikeys.apiurlMax;
 
 // setting states for common searching 
 const [state, setState] = React.useState({
@@ -43,6 +40,7 @@ function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+// setting states for year filter
 const [years, setYears] = React.useState(0)
 let year = `&y=${years}`
 if(years == 0) year = ''
@@ -85,6 +83,7 @@ const handleClose = ()=> {
     setRandom(false)
   }; 
 
+// adding movies to recently views 
   const handleSubmit = async (movie) =>{
     const result = await moviesApi.addMovies(movie)
     console.log(movie)
@@ -97,8 +96,6 @@ const [filter, setFilter] = React.useState(false)
 const handleFilter = () =>{
     setFilter(true)
 }
-
-
 
     return (
         <>

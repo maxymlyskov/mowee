@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View} from 'react-native';
+import { FlatList, StyleSheet, View, TouchableWithoutFeedback} from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
@@ -10,14 +10,14 @@ import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
 import LikeButton from '../components/LikeButton';
+import Icon from '../components/Icon';
 
 
 function HomeScreen({navigation}) {
 
-  // getting data from the server
+  // getting liked movies from the server
 
     const getMoviesApi = useApi(moviesApi.getMoviesLiked)
-    console.log(getMoviesApi)
     const [refreshing, setRefreshing] = useState(false)
 
     useEffect(()=>{
@@ -32,13 +32,13 @@ function HomeScreen({navigation}) {
               backgroundColor: colors.halfdark,
           }
       }/>}
-    // function for like button (deleting)
+
+  // function for like button (deleting)
     const handleDelete = async (movie) =>{
       const result = await moviesApi.deleteMovie(movie)
       if(!result.ok) return alert('Is not working!' + result )
       getMoviesApi.request()
   } 
-    
     return (<>
             <ActivityIndicator visible={getMoviesApi.loading }/>
         <Screen style={styles.screen}>
@@ -81,6 +81,11 @@ function HomeScreen({navigation}) {
 const styles = StyleSheet.create({
     screen:{
         backgroundColor: colors.halfdark,
+      },
+      warningScreen:{
+        backgroundColor: colors.halfdark,
+        paddingVertical: 30,
+        paddingHorizontal: 10
     },
     flatlist: {
       height: 400,
@@ -92,6 +97,20 @@ const styles = StyleSheet.create({
     likedText:{
       color: colors.light,
       fontSize: 25
+    },
+    warning:{
+      width: 250,
+      padding: 30,
+      height: 250,
+      borderRadius: 50,
+      backgroundColor: colors.silver,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    warningText:{
+      fontSize: 20,
+      color: colors.white,
+      fontWeight: 'bold'
     }
 })
 

@@ -7,7 +7,7 @@ import colors from '../config/colors';
 function Icon({
     name,
     size = 50,
-    backgroundColor = colors.black,
+    backgroundColor = colors.white,
     iconColor = colors.white
 }) {
     return (
