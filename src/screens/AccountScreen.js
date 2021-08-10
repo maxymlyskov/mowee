@@ -43,10 +43,6 @@ const menuItems=[
     {   title: 'Recently watched: ' + getMoviesApi.data.length,
     icon:{
             name: 'movie',
-<<<<<<< HEAD
-=======
-            backgorundColor: colors.black
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
         },
         targetScreen: 'Recently'
     },
@@ -54,20 +50,12 @@ const menuItems=[
         title: 'Liked movies: ' + getMoviesLikedApi.data.length,
         icon:{
             name: 'thumb-up',
-<<<<<<< HEAD
-=======
-            backgorundColor: colors.black
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
         },
         targetScreen: 'HomeScreen'
     },
     {   title: 'Rated movies: ' + rated,
     icon:{
             name: 'star',
-<<<<<<< HEAD
-=======
-            backgorundColor: colors.black
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
         },
         targetScreen: 'HomeScreen'
     }
@@ -92,12 +80,7 @@ const menuItems=[
                     <ListItem 
                     title={item.title}
                     IconComponent={<Icon
-<<<<<<< HEAD
                         name={item.icon.name} />}
-=======
-                        name={item.icon.name}
-                        iconColor={item.icon.backgorundColor} />}
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
                         onPress={() => navigation.navigate(item.targetScreen)}
                     />
                 )}

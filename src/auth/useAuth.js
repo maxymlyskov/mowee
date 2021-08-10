@@ -1,9 +1,5 @@
 import {useContext} from 'react'
-<<<<<<< HEAD
 import {Alert} from "react-native";
-=======
-import {Alert } from "react-native";
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 import jwtDecode from 'jwt-decode'
 import AuthContext from './context'
 import authStorage from './storage'

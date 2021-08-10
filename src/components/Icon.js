@@ -8,11 +8,7 @@ function Icon({
     name,
     size = 50,
     backgroundColor = colors.white,
-<<<<<<< HEAD
     iconColor = colors.black
-=======
-    iconColor = colors.white
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 }) {
     return (
         <View style={{

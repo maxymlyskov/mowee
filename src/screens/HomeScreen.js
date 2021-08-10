@@ -1,30 +1,15 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
 import { Animated, FlatList, StyleSheet, View, Dimensions } from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator';
 import AppButton from '../components/AppButton';
 import AppText from '../components/AppText';
 import { useFonts } from 'expo-font';
-=======
-import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View, TouchableWithoutFeedback} from 'react-native';
-import ActivityIndicator from '../components/ActivityIndicator'
-import AppButton from '../components/AppButton'
-import AppText from '../components/AppText'
-import Card from '../components/Card';
-import Screen from '../components/Screen'
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
-<<<<<<< HEAD
 import Header from '../components/Header';
 import CarouselItem from '../components/CarouselItem';
-=======
-import LikeButton from '../components/LikeButton';
-import Icon from '../components/Icon';
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 
 const {width, height} = Dimensions.get('window'); // getting width and height of the app's window 
 
@@ -41,20 +26,14 @@ function HomeScreen({ navigation }) {
 
   // getting liked movies from the server
 
-<<<<<<< HEAD
   const getMoviesApi = useApi(moviesApi.getMoviesLiked)
   console.log(getMoviesApi)
   const [refreshing, setRefreshing] = useState(false)
-=======
-    const getMoviesApi = useApi(moviesApi.getMoviesLiked)
-    const [refreshing, setRefreshing] = useState(false)
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 
   useEffect(()=>{
     getMoviesApi.request()
   }, [])
 
-<<<<<<< HEAD
   const itemSeparatorComponent = () => {
     return (
       <View 
@@ -92,38 +71,6 @@ function HomeScreen({ navigation }) {
           <Animated.FlatList
             horizontal
             pagingEnabled
-=======
-    const itemSeparatorComponent = () => {
-      return <View style = {
-          {
-              height: '100%',
-              width: 5,
-              backgroundColor: colors.halfdark,
-          }
-      }/>}
-
-  // function for like button (deleting)
-    const handleDelete = async (movie) =>{
-      const result = await moviesApi.deleteMovie(movie)
-      if(!result.ok) return alert('Is not working!' + result )
-      getMoviesApi.request()
-  } 
-
-    return (<>
-            <ActivityIndicator visible={getMoviesApi.loading }/>
-        <Screen style={styles.screen}>
-            {getMoviesApi.error &&
-            <>
-            <AppText>Couldn't retrieve the listings</AppText>
-            <AppButton title='Retry' onPress={getMoviesApi.request()}/>
-            </>}
-            <View style={styles.liked}>
-              <AppText style={styles.likedText}>Liked videos:</AppText>
-            </View>
-            <FlatList
-            data={getMoviesApi.data}
-            keyExtractor={(movie)=>movie._id}
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
             showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={itemSeparatorComponent}
             removeClippedSubviews={false}
@@ -186,7 +133,6 @@ function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
   screen: {
     flex: 1,
     backgroundColor: colors.whiteGrey,
@@ -205,41 +151,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     marginBottom: 30
   }
-=======
-    screen:{
-        backgroundColor: colors.halfdark,
-      },
-      warningScreen:{
-        backgroundColor: colors.halfdark,
-        paddingVertical: 30,
-        paddingHorizontal: 10
-    },
-    flatlist: {
-      height: 400,
-      flexGrow: 0},
-    liked:{
-      zIndex: 1,
-      bottom: 50
-    },
-    likedText:{
-      color: colors.light,
-      fontSize: 25
-    },
-    warning:{
-      width: 250,
-      padding: 30,
-      height: 250,
-      borderRadius: 50,
-      backgroundColor: colors.silver,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    warningText:{
-      fontSize: 20,
-      color: colors.white,
-      fontWeight: 'bold'
-    }
->>>>>>> b698013af32c51e0eec3746874bd56f951cded33
 })
 
 export default HomeScreen;
