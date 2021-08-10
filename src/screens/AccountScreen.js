@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import Icon from '../components/Icon';
 import ListItem from '../components/lists/ListItem';
 import ListItemSeparator from '../components/lists/ListItemSeparator';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
+
 
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
@@ -13,7 +14,6 @@ import useAuth from '../auth/useAuth'
 
 
 function AccountScreen({navigation}) {
-    
 // getting data from the server to show number of liked and rated movies
 const getMoviesLikedApi = useApi(moviesApi.getMoviesLiked)
 const getMoviesApi = useApi(moviesApi.getMovies)
@@ -43,7 +43,6 @@ const menuItems=[
     {   title: 'Recently watched: ' + getMoviesApi.data.length,
     icon:{
             name: 'movie',
-            backgorundColor: colors.purple
         },
         targetScreen: 'Recently'
     },
@@ -51,21 +50,19 @@ const menuItems=[
         title: 'Liked movies: ' + getMoviesLikedApi.data.length,
         icon:{
             name: 'thumb-up',
-            backgorundColor: colors.primary
         },
         targetScreen: 'HomeScreen'
     },
-    {   title: 'Number of Rated movies: ' + rated,
+    {   title: 'Rated movies: ' + rated,
     icon:{
-            name: 'star-outline',
-            backgorundColor: colors.gold
+            name: 'star',
         },
         targetScreen: 'HomeScreen'
     }
 ]
     return (
         <Screen style={styles.screen}>
-            <View style={styles.container}>
+            <View style={styles.containerAccount}>
             <ListItem
                 title={user.name}
                 subTitle={user.email}
@@ -83,9 +80,8 @@ const menuItems=[
                     <ListItem 
                     title={item.title}
                     IconComponent={<Icon
-                        name={item.icon.name}
-                        backgroundColor={item.icon.backgorundColor} />}
-                    onPress={() => navigation.navigate(item.targetScreen)}
+                        name={item.icon.name} />}
+                        onPress={() => navigation.navigate(item.targetScreen)}
                     />
                 )}
                 />
@@ -93,10 +89,13 @@ const menuItems=[
             <View style={styles.logout}>
                 <ListItem
                 title= 'Log Out'
+                backgorundColor={colors.preSilver}
                 IconComponent={<Icon
                     title= 'Log Out'
                     name='logout'
-                    backgroundColor={colors.blue} />}
+                    iconColor={colors.black}
+                    backgroundColor={colors.white}
+                     />}
                 onPress={()=>logOut()} />
             </View>
         </Screen>
@@ -105,14 +104,19 @@ const menuItems=[
 
 const styles = StyleSheet.create({
     container:{
+        paddingVertical: 25,
+    },
+    containerAccount:{
+        // paddingLeft: Dimensions.get('window').width/8,
         paddingVertical: 25
     },
     screen:{
-        backgroundColor: colors.halfdark
+        backgroundColor: colors.white 
 
     },
     logout: {
-        paddingVertical: 50
+        paddingVertical: 50,
+        paddingLeft: Dimensions.get('window').width/2.5
     }
 })
 

@@ -7,8 +7,8 @@ import colors from '../config/colors';
 function Icon({
     name,
     size = 50,
-    backgroundColor = colors.black,
-    iconColor = colors.white
+    backgroundColor = colors.white,
+    iconColor = colors.black
 }) {
     return (
         <View style={{
