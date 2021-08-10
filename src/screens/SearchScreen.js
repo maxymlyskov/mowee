@@ -54,6 +54,17 @@ const search = () =>{
         })
 }
 
+// selecting movie by imdbID
+
+const openPopup = id =>{
+    axios('http://www.omdbapi.com/?i='+ id +'&apikey=6b3739ab').then(({ data }) => {
+        let result = data;
+        setState(prevState => {
+            return { selected: result}
+        })
+    })
+}
+
 const searchRandom = () =>{
     
     axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=6b3739ab').then((response) => {
@@ -133,8 +144,13 @@ const handleFilter = () =>{
                         title={item.Title}
                         subTitle={`Year ${item.Year}`}
                         imageUrl={item.Poster}
-                        onPress={() => {navigation.navigate('SearchDetails', item);
-                                        handleSubmit(item)}}
+                        onPress={() => {openPopup(item.imdbID)
+                                        navigation.navigate('SearchDetails', item);
+                                        console.log(item)
+                                        if(state.selected.Genre !== undefined){
+                                            handleSubmit(state.selected)
+                                        }
+                                        }}
                     />
                 }
                 keyboardShouldPersistTaps='always'

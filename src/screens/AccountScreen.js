@@ -85,7 +85,7 @@ const menuItems=[
                     IconComponent={<Icon
                         name={item.icon.name}
                         iconColor={item.icon.backgorundColor} />}
-                    onPress={() => navigation.navigate(item.targetScreen)}
+                        onPress={() => navigation.navigate(item.targetScreen)}
                     />
                 )}
                 />

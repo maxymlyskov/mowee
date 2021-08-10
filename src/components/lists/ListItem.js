@@ -45,11 +45,12 @@ const styles = StyleSheet.create({
     },
     title:{
         fontSize: 20,
-        color: colors.black
+        color: colors.black,
+        fontWeight: '800',
     },
     subTitle:{
         fontSize: 15,
-        color: colors.medium
+        color: colors.medium,
     }
 })
 

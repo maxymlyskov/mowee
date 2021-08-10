@@ -20,6 +20,7 @@ function RecentlyScreen({navigation}) {
     useEffect(()=>{
         getMoviesApi.request()
     }, [])
+    let uniqueData = getMoviesApi.data.filter( (ele, ind) => ind === getMoviesApi.data.findIndex( elem => elem.imdbID === ele.imdbID))
 
     
     return (<>
@@ -31,13 +32,13 @@ function RecentlyScreen({navigation}) {
             <AppButton title='Retry' onPress={getMoviesApi.request()}/>
             </>}
             <FlatList
-            data={getMoviesApi.data}
-            keyExtractor={(movie)=>movie._id}
+            data={uniqueData}
+            keyExtractor={(movie)=>movie.imdbID}
             showsVerticalScrollIndicator={false}
             renderItem={({item})=><Screen style={styles.screen}>
               <Card
                 title={item.Title}
-                subTitle = {'Year: ' + item.Year}
+                subTitle = {item.Genre}
                 imageUrl={item.Poster}
                 onPress={() => navigation.navigate('SearchDetails', item)}
                                     />

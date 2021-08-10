@@ -39,6 +39,7 @@ function HomeScreen({navigation}) {
       if(!result.ok) return alert('Is not working!' + result )
       getMoviesApi.request()
   } 
+
     return (<>
             <ActivityIndicator visible={getMoviesApi.loading }/>
         <Screen style={styles.screen}>
