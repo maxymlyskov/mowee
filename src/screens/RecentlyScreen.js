@@ -13,15 +13,16 @@ import useApi from '../hooks/useApi';
 
 function RecentlyScreen({navigation}) {
 
-  // getting data from the server
-
+  // getting recently viewed movies from the server
     const getMoviesApi = useApi(moviesApi.getMovies)
     const [refreshing, setRefreshing] = useState(false)
 
     useEffect(()=>{
         getMoviesApi.request()
     }, [])
+    let uniqueData = getMoviesApi.data.filter( (ele, ind) => ind === getMoviesApi.data.findIndex( elem => elem.imdbID === ele.imdbID))
 
+<<<<<<< HEAD
     let uniqueData = getMoviesApi.data.filter( (ele, ind) => ind === getMoviesApi.data.findIndex( elem => elem.imdbID === ele.imdbID))
     
     return (
@@ -54,6 +55,28 @@ function RecentlyScreen({navigation}) {
                     onRefresh={()=>getMoviesApi.request()}
                     refreshing={refreshing}
                 />
+=======
+    
+    return (<>
+            <ActivityIndicator visible={getMoviesApi.loading }/>
+        <Screen style={styles.screen}>
+            {getMoviesApi.error &&
+            <>
+            <AppText>Couldn't retrieve the listings</AppText>
+            <AppButton title='Retry' onPress={getMoviesApi.request()}/>
+            </>}
+            <FlatList
+            data={uniqueData}
+            keyExtractor={(movie)=>movie.imdbID}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item})=><Screen style={styles.screen}>
+              <Card
+                title={item.Title}
+                subTitle = {item.Genre}
+                imageUrl={item.Poster}
+                onPress={() => navigation.navigate('SearchDetails', item)}
+                                    />
+>>>>>>> b698013af32c51e0eec3746874bd56f951cded33
             </Screen>
         </>
     );
@@ -66,7 +89,6 @@ const styles = StyleSheet.create({
         height: 500,
         backgroundColor: colors.halfdark,
         padding: 5, 
-
     }
 })
 

@@ -9,7 +9,7 @@ import Screen from '../components/Screen';
 import{ AppFormField, AppForm, ErrorMessage, SubmitButton } from '../components/forms'
 
 
-
+// email and password validation
 const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label("Email").nullable(),
     password: Yup.string().required().min(4).label("Password").nullable()
@@ -17,11 +17,11 @@ const validationSchema = Yup.object().shape({
 
 
 function LoginScreen() {
-
+// auth call
 const [loginFailed, setLoginFailed] = useState(false)
 const auth = useAuth()
 
-
+// login button function
 const handleSubmit = async ({email, password})=>{
     const result = await authApi.login(email, password);
     if(!result.ok) return setLoginFailed(true)

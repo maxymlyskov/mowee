@@ -12,6 +12,7 @@ import colors from '../config/colors';
 import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import LikeButton from '../components/LikeButton';
+import useApi from '../hooks/useApi';
 
 
 function SearchDetailsScreen({route}) {
@@ -22,6 +23,8 @@ function SearchDetailsScreen({route}) {
         results: [],
         selected: {}
     })
+// getting liked movies from the server
+    const getMoviesApi = useApi(moviesApi.getMoviesLiked)
 
 
 // setting states for loading
@@ -68,10 +71,11 @@ function SearchDetailsScreen({route}) {
     if (!loaded) {
         return null;    
     }
-    // function for like button
+// function for like button
     const handleSubmit = async () =>{
         const result = await moviesApi.addMoviesLiked(selectedMovie)
         if(!result.ok) return alert('Is not working!' + result )
+        getMoviesApi.request()
     }   
     return (
         <>
