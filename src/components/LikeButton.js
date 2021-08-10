@@ -10,27 +10,27 @@ function LikeButton({onPress, form, size}) {
     const handleSubmitted = () =>{
         setLike(true)
     }
-// logic for form of button
+    // logic for form of button
     let liked = null
 
     if(form == true) liked = !like
     else liked = like
 
     return (
-        
-        
         <View style={styles.container}>
             <TouchableWithoutFeedback onPress={()=>{onPress(); handleSubmitted()}}>
-                {liked ?
-                <MaterialCommunityIcons 
-                    name={"heart-outline"}
-                    size={size}
-                    color={colors.danger}/>:
-                    <MaterialCommunityIcons 
-                    name={"heart"}
-                    size={size}
-                    color={colors.danger}/>
-                    }
+                {liked 
+                    ? <MaterialCommunityIcons 
+                        name={"bookmark-outline"}
+                        size={size}
+                        color={colors.white}
+                    />
+                    :  <MaterialCommunityIcons 
+                        name={"bookmark"}
+                        size={size}
+                        color={colors.white}
+                    />
+                }
             </TouchableWithoutFeedback>
         </View>
     );

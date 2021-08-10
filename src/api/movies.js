@@ -9,6 +9,7 @@ const addMovies = (movie, onUploadProgress) =>{
     const data = new FormData();
 
     data.append('Title', movie.Title);
+    data.append('Genre', movie.Genre);
     data.append('Year', movie.Year);
     data.append('Poster', movie.Poster)
     data.append('imdbID', movie.imdbID)   

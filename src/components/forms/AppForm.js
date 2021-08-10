@@ -4,11 +4,13 @@ import {Formik} from 'formik'
 
 function AppForm({initialValues, onSubmit, validationSchema, children}) {
     return (
-        <Formik initialValues={initialValues} 
+        <Formik 
+            initialValues={initialValues} 
             validationSchema={validationSchema} 
-            onSubmit={onSubmit}>
-                {()=><>{children}</>}
-            </Formik>
+            onSubmit={onSubmit}
+        >
+            {()=><>{children}</>}
+        </Formik>
     );
 }
 

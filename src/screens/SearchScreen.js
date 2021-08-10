@@ -1,9 +1,18 @@
 import React from 'react';
-import {  StyleSheet, TouchableWithoutFeedback, View, FlatList, Modal, Button} from 'react-native';
+import {
+    StyleSheet,
+    TouchableWithoutFeedback,
+    View,
+    FlatList,
+    Modal,
+    Button,
+    Text,
+    Dimensions
+} from 'react-native';
+
 import AppForm from '../components/forms/AppForm';
 import AppFormField from '../components/forms/AppFormField';
-import axios from 'axios'
-import Screen from '../components/Screen'
+import axios from 'axios';
 import apikeys from '../config/apikeys';
 import colors from '../config/colors';
 import Card from '../components/Card'
@@ -11,184 +20,259 @@ import AppButton from '../components/AppButton';
 import RandomCard from '../components/RandomCard';
 import RandomButton from '../components/RandomButton';
 import RandomIndicator from '../components/RandomIndicator';
-import moviesApi from '../api/movies'
-import Icon from '../components/Icon';
+import moviesApi from '../api/movies';
 import AppTextInput from '../components/AppTextInput';
-import AppText from '../components/AppText';
+import LikeButton from '../components/LikeButton';
+
+const { width, height} = Dimensions.get('window');
 
 
-function SearchScreen({navigation}) {
+function SearchScreen({ navigation }) {
 
-const apiurl = apikeys.apiurlMax;
+    const apiurl = apikeys.apiurlMax;
 
-// setting states for common searching 
-const [state, setState] = React.useState({
-    s: '',
-    results: [],
-    selected: {}
-})
+    const getMoviesApi = useApi(moviesApi.getMoviesLiked)
 
-// setting states for random searching 
+    // setting states for common searching 
+    const [state, setState] = React.useState({
+        s: '',
+        results: [],
+        selected: {}
+    })
 
-const [randomS, setRandomS] = React.useState({
-    results: {},
-})
+    // setting states for random searching 
 
-// setting states for loading random
-const [loading, setLoading] = React.useState(false)
+    const [randomS, setRandomS] = React.useState({
+        results: {},
+    })
 
-// generating random numbers
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-const [years, setYears] = React.useState(0)
-let year = `&y=${years}`
-if(years == 0) year = ''
-const search = () =>{
-    axios('http://www.omdbapi.com/?s='+ state.s + year + '&apikey=5657bf65&r=json')
-        .then(({data})=>{
-            let results = data.Search;
-            setState(prevState=>{
-                return { ...prevState, results: results}
+    // setting states for loading random
+    const [loading, setLoading] = React.useState(false)
+
+    // generating random numbers
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    const [years, setYears] = React.useState(0)
+    let year = `&y=${years}`
+    if(years == 0) year = ''
+    const search = () =>{
+        axios('http://www.omdbapi.com/?s='+ state.s + year + '&apikey=5657bf65&r=json')
+            .then(({data})=>{
+                let results = data.Search;
+                setState(prevState=>{
+                    return { ...prevState, results: results}
+                })
+            })
+    }
+
+    // selecting movie by imdbID
+
+    const openPopup = id =>{
+        axios('http://www.omdbapi.com/?i='+ id +'&apikey=6b3739ab').then(({ data }) => {
+            let result = data;
+            setState(prevState => {
+                return { selected: result}
             })
         })
-}
+    }
 
-const searchRandom = () =>{
-    
-    axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=6b3739ab').then((response) => {
-
-        if(response.data.Poster !== "N/A" && response.data){
-            let results = response.data;
-            setRandomS(prevState=>{
-                return { ...prevState, results: results }
-        })}
-        else{
-            searchRandom()
-        }
+    const searchRandom = () => {
         
-    })}
+        axios.get('http://www.omdbapi.com/?i=tt'+getRandomInt(1000000,1900000)+'&apikey=6b3739ab').then((response) => {
 
-// setting states for random button: opening, closing it and showing random indicator
-const [random, setRandom] = React.useState(false)
-const handleOpen =  ()=> {
-    setLoading(true);
-    setTimeout(()=>{
-        setRandom(true)
-        searchRandom()
-        setTimeout(()=>setLoading(false),1000)
-    }, 2500)
-  };  
-const handleClose = ()=> {
-    setRandom(false)
-  }; 
+            if(response.data.Poster !== "N/A" && response.data){
+                let results = response.data;
+                setRandomS(prevState=>{
+                    return { ...prevState, results: results }
+                })
+            }
+            else{
+                searchRandom()
+            }
+            
+        })
+    }
 
-  const handleSubmit = async (movie) =>{
-    const result = await moviesApi.addMovies(movie)
-    console.log(movie)
-    if(!result.ok) return alert('Is not working!' + result.originalError )
-} 
+    // setting states for random button: opening, closing it and showing random indicator
+    const [random, setRandom] = React.useState(false)
+    const handleOpen =  ()=> {
+        setLoading(true);
+        setTimeout(()=>{
+            setRandom(true)
+            searchRandom()
+            setTimeout(()=>setLoading(false),1000)
+        }, 2500)
+    };  
+    const handleClose = ()=> {
+        setRandom(false)
+    }; 
 
-// setting states for filtering 
-const [filter, setFilter] = React.useState(false)
+    const handleSubmit = async (movie) =>{
+        const result = await moviesApi.addMovies(movie)
+        console.log(movie)
+        if(!result.ok) return alert('Is not working!' + result.originalError )
+    } 
 
-const handleFilter = () =>{
-    setFilter(true)
-}
+    // setting states for filtering 
+    const [filter, setFilter] = React.useState(false)
 
-
+    const handleFilter = () =>{
+        setFilter(true)
+    }
 
     return (
-        <>
-        <RandomIndicator visible={loading} />
-        <Screen style={styles.container}>
-            <AppForm
-                initialValues={{search: ''}}
-            >                
-                <AppFormField
-                    placeholder='Search movie'
-                    icon='movie-search'
-                    name='search'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={state.s}
-                    onChangeText={text=>setState(prevState=>{
-                        return {...prevState, s: text}
-                    })}
-                    onSubmitEditing={search}
-                />
+        <View style={styles.container}>
+            <RandomIndicator visible={loading} />
 
-            </AppForm>    
-            <TouchableWithoutFeedback onPress={handleFilter}>
-                <View style={styles.filter}>
-                    <Icon iconColor={colors.medium} backgroundColor={colors.silver} size={35} name='filter-variant'/>     
-                </View>  
-            </TouchableWithoutFeedback>
-            <FlatList
-                style={styles.results}
-                data={state.results}
-                keyExtractor={(item) => item.imdbID}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item}) =>
-                    <Card
-                        title={item.Title}
-                        subTitle={`Year ${item.Year}`}
-                        imageUrl={item.Poster}
-                        onPress={() => {navigation.navigate('SearchDetails', item);
-                                        handleSubmit(item)}}
-                    />
-                }
-                keyboardShouldPersistTaps='always'
-            />
-            {state.results == '' || state.results == undefined ? <View style={styles.randomButton}>
-
-                <RandomButton title='RANDOM' onPress={handleOpen}/>
+            <View style={{flex: 1, paddingHorizontal: 40}}>
+                {/* Search Form */}
                 
-            </View>: null}
-            <Modal animationType='fade' transparent={true} visible={random}>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 30 }}>
+                    {/* 
+                        <TouchableWithoutFeedback onPress={handleFilter}>
+                            <View style={styles.filter}>
+                                <Icon iconColor={colors.black} backgroundColor={colors.white} size={35} name='filter-variant'/>     
+                            </View>  
+                        </TouchableWithoutFeedback> 
+                    */}
+                    
+                    <AppForm initialValues={{search: ''}} >                
+                        <AppFormField
+                            placeholder='Search movie'
+                            icon='magnify'
+                            name='search'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            value={state.s}
+                            onChangeText={text=>setState(prevState=>{
+                                return {...prevState, s: text}
+                            })}
+                            onSubmitEditing={search}
+                        />
+                    </AppForm>
+                </View>
 
-                <RandomCard
+                {/* Content */}
+
+                <View style={{flex: 10}}> 
+                    <FlatList
+                        style={styles.results}
+                        data={state.results}
+                        keyExtractor={(item) => item.imdbID}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({item}) => {
+                            return (
+                                <View style={{flex: 1, alignItems: 'center', height: height * 0.6, borderRadius: 20, marginBottom: 30 }}>
+                                    <View style={styles.shadowBox}>
+                                        <View style={styles.shadow} />
+                                    </View>
+                                    <View style={{flex: 1, width: '100%', height: '100%', zIndex: 1}}>
+                                        <View style={styles.likeButton}>
+                                            <LikeButton form size={25} onPress={handleSubmit} />
+                                        </View>
+                                        <Card
+                                            title={item.Title}
+                                            subTitle={`Year ${item.Year}`}
+                                            imageUrl={item.Poster}
+                                            onPress={() => {
+                                                openPopup(item.imdbID)
+                                                navigation.navigate('SearchDetails', item);
+                                                console.log(item)
+                                                if(state.selected.Genre !== undefined){
+                                                    handleSubmit(state.selected)
+                                                }
+                                            }}
+                                        />
+                                    </View>
+                                </View>
+                            );
+                        }}
+                        keyboardShouldPersistTaps='always'
+                    />
+
+                    {/* Random Button and Card */}
+                    {state.results == '' || state.results == undefined ? 
+                        <View style={styles.randomButton}>
+                            <RandomButton title='RANDOM' onPress={handleOpen}/>
+                        </View>
+                    : null}
+                    <Modal animationType='fade' transparent={true} visible={random}>
+                        <RandomCard
                             title={randomS.results.Title}
                             subTitle={`Year ${randomS.results.Year}`}
                             imageUrl={randomS.results.Poster}
                             onPress={() => {navigation.navigate('SearchDetails', randomS.results); handleClose()}}
                         />
-                <View style={styles.randomContainer}>
-                <AppButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
-                <AppButton title='BACK' onPress={handleClose}/>
+                        <View style={styles.randomContainer}>
+                            <AppButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
+                            <AppButton title='BACK' onPress={handleClose}/>
+                        </View>
+                    </Modal>
+                    
+                    {/*
+                        <Modal 
+                            animationType='fade' 
+                            onRequestClose={()=>setFilter(false)} 
+                            dismiss={()=>setFilter(false)} 
+                            transparent={true} 
+                            visible={filter}>
+                            <View style={styles.modal}>
+                                <AppTextInput 
+                                    icon='counter' 
+                                    placeholder='Year of release' 
+                                    width='80%' 
+                                    onChangeText={text=>setYears(text)} 
+                                    onSubmitEditing={()=>{setFilter(false); search()}}
+                                />
+                            </View>
+                        </Modal>
+                    */}
                 </View>
-            </Modal>
-            <Modal 
-                animationType='fade' 
-                onRequestClose={()=>setFilter(false)} 
-                dismiss={()=>setFilter(false)} 
-                transparent={true} 
-                visible={filter}>
-                <View style={styles.modal}>
-                    <AppTextInput 
-                        icon='counter' 
-                        placeholder='Year of release' 
-                        width='80%' 
-                        onChangeText={text=>setYears(text)} 
-                        onSubmitEditing={()=>{setFilter(false); search()}}/>
-                </View>
-            </Modal>
-        </Screen>
-        </>
+            </View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container:{
-        paddingTop: 45,
-        paddingBottom: 10,
-        paddingHorizontal: 15,
+    container: {
         flex: 1,
-        backgroundColor: colors.halfdark
-
+        backgroundColor: colors.white
     },
+
+    shadowBox: {
+        flex: 1, 
+        position: 'absolute', 
+        width: '100%', 
+        height: '100%', 
+        alignItems: 'center', 
+        zIndex: 0
+    },
+    shadow: {
+        flex: 1,
+        width: '90%', 
+        height: '100%', 
+        backgroundColor: '#000', 
+        borderRadius: 10, 
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 10,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+        elevation: 10,
+    },
+
+    likeButton: {
+        position: 'absolute',
+        right: '5%',
+        top: '3%',
+        zIndex: 2
+    },
+
     results:{
         flex: 1
     },
@@ -197,17 +281,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    randomButton:{
-        justifyContent: 'center',
+    randomButton: {
+        flex: 1,
         alignItems: 'center',
-        paddingBottom: 200
-    },
-    filter:{
-        marginLeft: 'auto',
-        bottom: 55
     },
     modal: {
-        backgroundColor: colors.preSilver,
+        backgroundColor: colors.white,
         top: 130, 
         borderBottomLeftRadius: 50,
         borderBottomRightRadius: 50,

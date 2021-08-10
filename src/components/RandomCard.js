@@ -14,7 +14,7 @@ import colors from "../config/colors";
 
 function RandomCard({ title, subTitle, imageUrl, onPress }) {
   const [loaded] = useFonts({
-    BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf'),
+    YesevaOne: require('../../assets/fonts/YesevaOne.ttf'),
   });
 
   if (!loaded) {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
    
   },
   title: {
-    fontFamily: 'BebasNeueBold',
+    fontFamily: 'YesevaOne',
     marginBottom: 7,
     fontSize: 30,
     color: colors.light, 

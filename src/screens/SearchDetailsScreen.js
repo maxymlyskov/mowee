@@ -62,7 +62,7 @@ function SearchDetailsScreen({route}) {
 
 // loading fonts
     const [loaded] = useFonts({
-        BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf')
+        YesevaOne: require('../../assets/fonts/YesevaOne.ttf')
     });
 
     if (!loaded) {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     titleText: {
-        fontFamily: 'BebasNeueBold',
+        fontFamily: 'YesevaOne',
         fontSize: 35,
         color: colors.silver
     },

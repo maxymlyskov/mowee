@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, FlatList, StyleSheet, View} from 'react-native';
+import { Text, Button, FlatList, StyleSheet, View} from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
@@ -22,51 +22,48 @@ function RecentlyScreen({navigation}) {
         getMoviesApi.request()
     }, [])
 
-    const itemSeparatorComponent = () => {
-      return <View style = {
-          {
-              height: '100%',
-              width: 5,
-              backgroundColor: colors.halfdark,
-          }
-      }/>}
+    let uniqueData = getMoviesApi.data.filter( (ele, ind) => ind === getMoviesApi.data.findIndex( elem => elem.imdbID === ele.imdbID))
     
-    const makeHorizontal = () =>{
-
-    }
-    
-    return (<>
+    return (
+        <>
             <ActivityIndicator visible={getMoviesApi.loading }/>
-        <Screen style={styles.screen}>
-            {getMoviesApi.error &&
-            <>
-            <AppText>Couldn't retrieve the listings</AppText>
-            <AppButton title='Retry' onPress={getMoviesApi.request()}/>
-            </>}
-            <FlatList
-            data={getMoviesApi.data}
-            keyExtractor={(movie)=>movie._id}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item})=><Screen style={styles.screen}>
-              <Card
-                title={item.Title}
-                subTitle = {'Year: ' + item.Year}
-                imageUrl={item.Poster}
-                onPress={() => navigation.navigate('SearchDetails', item)}
-                                    />
+            <Screen style={styles.screen}>
+                {getMoviesApi.error &&
+                    <>
+                        <AppText>Couldn't retrieve the listings</AppText>
+                        <AppButton title='Retry' onPress={getMoviesApi.request()}/>
+                    </>
+                }
+                <FlatList
+                    data={uniqueData}
+                    keyExtractor={(movie)=>movie.imdbID}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item})=> {
+                        return (
+                            <View style={styles.screen}>
+                                <Card
+                                    title={item.Title}
+                                    subTitle = {'Year: ' + item.Genre}
+                                    imageUrl={item.Poster}
+                                    onPress={() => navigation.navigate('SearchDetails', item)}
+                                />
+                                <Text style={{fontSize: 25, color: '#fff'}}>{item.Year}</Text>
+                            </View>
+                        );
+                    }}
+                    onRefresh={()=>getMoviesApi.request()}
+                    refreshing={refreshing}
+                />
             </Screen>
-                                    }
-            onRefresh={()=>getMoviesApi.request()}
-            refreshing={refreshing}
-            />
-            
-        </Screen>
         </>
     );
 }
 
 const styles = StyleSheet.create({
-    screen:{
+    screen: {
+        flex: 1,
+        width: '100%',
+        height: 500,
         backgroundColor: colors.halfdark,
         padding: 5, 
 

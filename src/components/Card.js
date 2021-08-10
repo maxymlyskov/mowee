@@ -4,38 +4,30 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Text,
-  Image
+  Image,
+  Dimensions
 } from "react-native";
 import { useFonts } from 'expo-font';
 
-// import {Image} from 'react-native-expo-image-cache'
-
 import colors from "../config/colors";
+import LikeButton from "./LikeButton";
 
-function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+const {width, height} = Dimensions.get('window')
+
+function Card({ imageUrl, onPress }) {
   const [loaded] = useFonts({
-    BebasNeueBold: require('../../assets/fonts/BebasNeue/BebasNeue-Bold.ttf'),
+    YesevaOne: require('../../assets/fonts/YesevaOne.ttf'),
   });
 
   if (!loaded) {
     return null;
   }
 
-
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
-        {/* <Image style={styles.image} preview={{uri: thumbnailUrl}} uri={imageUrl} tint='light' /> */}
+        <View style={styles.overlay} />
         {imageUrl ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />: null}
-        <View style={styles.detailsContainer}>
-          <Text style={styles.title} numberOfLines={1}>
-            {title}
-          </Text>
-          <Text style={styles.subTitle} numberOfLines={2}>
-            {subTitle}
-          </Text>
-         
-        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -43,31 +35,26 @@ function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 15,
-    backgroundColor: colors.darkblue,
-    marginBottom: 10,
+    flex: 1,
+    width: '100%',
+    height: '100%',
     overflow: "hidden",
-    flex: 1
-  },
-  detailsContainer: {
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
+    borderRadius: 10,
   },
   image: {
-    width: "100%",
-    height: 200,
+    flex: 1,
+    // width: null,
+    // height: null,
+    // resizeMode: 'cover',
   },
-  subTitle: {
-    color: colors.medium,
-    fontWeight: '100',
-   
-  },
-  title: {
-    fontFamily: 'BebasNeueBold',
-    marginBottom: 7,
-    fontSize: 30,
-    color: colors.light, 
+
+  overlay: {
+    flex: 1,
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, .1)',
+    width: '100%',
+    height: '100%',
+    zIndex: 1
   },
 });
 
