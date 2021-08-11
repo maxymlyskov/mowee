@@ -26,7 +26,7 @@ export default function HomeStack() {
       <RootStack.Screen name='Details' component={DetailsScreen} />
 
       <RootStack.Screen name='SearchScreen' component={SearchScreen} />
-      <RootStack.Screen name='SearchDetailsScreen' component={SearchDetailsScreen} />
+      <RootStack.Screen name='SearchDetails' component={SearchDetailsScreen} />
     </RootStack.Navigator>
   );
 }

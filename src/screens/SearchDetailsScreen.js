@@ -41,7 +41,7 @@ function SearchDetailsScreen({route}) {
 // selecting movie by imdbID
     const openPopup = id =>{
         setLoading(true)
-        axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=5657bf65&r=json').then(({ data }) => {
+        axios('http://www.omdbapi.com/?i='+ id +'&plot=full&apikey=6b3739ab&r=json').then(({ data }) => {
             let result = data;
             setLoading(false)
             setState(prevState => {

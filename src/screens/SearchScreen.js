@@ -59,7 +59,7 @@ function SearchScreen({ navigation }) {
     let year = `&y=${years}`
     if(years == 0) year = ''
     const search = () =>{
-        axios('http://www.omdbapi.com/?s='+ state.s + year + '&apikey=5657bf65&r=json')
+        axios('http://www.omdbapi.com/?s='+ state.s + year + '&apikey=6b3739ab')
             .then(({data})=>{
                 let results = data.Search;
                 setState(prevState=>{

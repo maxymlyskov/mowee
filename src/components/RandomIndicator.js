@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         width: '100%',
         zIndex: 1,
         position:'absolute',
-        backgroundColor: colors.halfdark
+        backgroundColor: colors.white
     }
 })
 
