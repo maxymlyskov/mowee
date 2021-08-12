@@ -47,8 +47,7 @@ const styles = StyleSheet.create({
   },
   titleBlock: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'center'
   },
   title: {
     fontFamily: 'YesevaOne',

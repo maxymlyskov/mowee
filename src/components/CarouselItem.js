@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     width: width * 0.75,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   detailsContainer: {
     justifyContent: 'flex-start',
