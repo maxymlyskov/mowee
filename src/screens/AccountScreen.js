@@ -57,7 +57,7 @@ const menuItems=[
     icon:{
             name: 'star',
         },
-        targetScreen: 'HomeScreen'
+        targetScreen: 'Rated'
     }
 ]
     return (

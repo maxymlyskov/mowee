@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, Button, FlatList, StyleSheet, View, Image, Animated} from 'react-native';
+import { Text, Dimensions, StyleSheet, Animated} from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
@@ -23,7 +23,7 @@ function RecentlyScreen({navigation}) {
         getMoviesApi.request()
     }, [])
 
-    scrollY = useRef(new Animated.Value(0)).current
+    const scrollY = useRef(new Animated.Value(0)).current
     
     return (
         <>
@@ -61,12 +61,12 @@ function RecentlyScreen({navigation}) {
                         return (
                             <Animated.View style={{ flex: 1,
                                                     width: '100%',
-                                                    height: 400,
+                                                    height: Dimensions.get('window').height/1.5,
                                                     backgroundColor: colors.white,
-                                                    padding: 15, 
+                                                    padding: 0, 
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    transform: [{scale}]}}>
+                                                    transform: [{scale}],}}>
                                 <CarouselItem
                                     title={item.Title}
                                     subTitle = {item.Genre}
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         width: '100%',
-        height: 400,
+        height: Dimensions.get('window').height/1.5,
         backgroundColor: colors.white,
         padding: 15, 
         justifyContent: 'center',
