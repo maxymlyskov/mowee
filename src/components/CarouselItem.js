@@ -57,8 +57,13 @@ export default function CarouselItem({ title, rating, subTitle, imageUrl, onPres
 const styles = StyleSheet.create({
   card: {
     flex: 1,
+<<<<<<< HEAD
     width: width * (width/523.6), // or width * 0.75
     overflow: 'hidden'
+=======
+    width: width * 0.75,
+    overflow: 'hidden',
+>>>>>>> 88b3fae0f6c48274c6b5444feb65b1e43da3850e
   },
   detailsContainer: {
     justifyContent: 'flex-start',

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, Button, FlatList, StyleSheet, View} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, Dimensions, StyleSheet, Animated} from 'react-native';
 import ActivityIndicator from '../components/ActivityIndicator'
 import AppButton from '../components/AppButton'
 import AppText from '../components/AppText'
-import Card from '../components/Card';
+import CarouselItem from '../components/CarouselItem';
 import Screen from '../components/Screen'
+import Header from '../components/Header'
+
 
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
@@ -20,39 +22,67 @@ function RecentlyScreen({navigation}) {
     useEffect(()=>{
         getMoviesApi.request()
     }, [])
-    let uniqueData = getMoviesApi.data.filter( (ele, ind) => ind === getMoviesApi.data.findIndex( elem => elem.imdbID === ele.imdbID))
+
+    const scrollY = useRef(new Animated.Value(0)).current
     
     return (
         <>
             <ActivityIndicator visible={getMoviesApi.loading }/>
             <Screen style={styles.screen}>
+
+            <Header navigation={navigation} />
                 {getMoviesApi.error &&
                     <>
                         <AppText>Couldn't retrieve the listings</AppText>
                         <AppButton title='Retry' onPress={getMoviesApi.request()}/>
                     </>
                 }
-                <FlatList
-                    data={uniqueData}
-                    keyExtractor={(movie)=>movie.imdbID}
+                <Animated.FlatList
+                    data={getMoviesApi.data}
+                    keyExtractor={(movie)=>movie._id}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: {contentOffset: {y: scrollY}}}],
+                        {useNativeDriver: true}
+                    )}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({item})=> {
+                    renderItem={({item, index})=> {
+                        const inputRange= [
+                            -1,
+                            0,
+                            400 * index,
+                            400 * (index + 2)
+                        ]
+
+                        const scale = scrollY.interpolate({
+                            inputRange,
+                            outputRange: [1, 1, 1, 0]
+                        })
+
                         return (
-                            <View style={styles.screen}>
-                                <Card
+                            <Animated.View style={{ flex: 1,
+                                                    width: '100%',
+                                                    height: Dimensions.get('window').height/1.5,
+                                                    backgroundColor: colors.white,
+                                                    padding: 0, 
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    transform: [{scale}],}}>
+                                <CarouselItem
                                     title={item.Title}
-                                    subTitle = {'Year: ' + item.Genre}
+                                    subTitle = {item.Genre}
                                     imageUrl={item.Poster}
                                     onPress={() => navigation.navigate('SearchDetails', item)}
                                 />
                                 <Text style={{fontSize: 25, color: '#fff'}}>{item.Year}</Text>
-                            </View>
+                            </Animated.View>
                         );
                     }}
                     onRefresh={()=>getMoviesApi.request()}
                     refreshing={refreshing}
                 />
+                
             </Screen>
+
         </>
     );
 }
@@ -61,9 +91,10 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         width: '100%',
-        height: 500,
-        backgroundColor: colors.halfdark,
-        padding: 5, 
+        height: Dimensions.get('window').height/1.5,
+        backgroundColor: colors.white,
+        padding: 15, 
+        justifyContent: 'center',
     }
 })
 
