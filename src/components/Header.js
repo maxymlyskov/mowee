@@ -6,7 +6,7 @@ import {
   StyleSheet
 } from 'react-native';
 import { useFonts } from 'expo-font';
-import {MaterialCommunityIcons} from '@expo/vector-icons'
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 
 import colors from "../config/colors";
 
@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
   titleBlock: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
   },
   title: {
     fontFamily: 'YesevaOne',

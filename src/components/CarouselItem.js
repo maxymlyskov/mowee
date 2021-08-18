@@ -8,12 +8,13 @@ import {
   Dimensions
 } from "react-native";
 import { useFonts } from 'expo-font';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import colors from "../config/colors";
 
 const width = Dimensions.get('window').width;
 
-export default function CarouselItem({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+export default function CarouselItem({ title, rating, subTitle, imageUrl, onPress, thumbnailUrl }) {
   // getting fonts
 
   const [loaded] = useFonts({
@@ -35,6 +36,12 @@ export default function CarouselItem({ title, subTitle, imageUrl, onPress, thumb
           {imageUrl ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />: null}
         </View>
         <View style={styles.detailsContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <FontAwesome style={{fontSize: 20, color: colors.medium, marginRight: 5}} name={'imdb'}></FontAwesome>
+            <Text style={styles.subTitle}>
+              {rating}
+            </Text>
+          </View>
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text> 
@@ -50,7 +57,7 @@ export default function CarouselItem({ title, subTitle, imageUrl, onPress, thumb
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    width: width * 0.75,
+    width: width * (width/523.6), // or width * 0.75
     overflow: 'hidden'
   },
   detailsContainer: {

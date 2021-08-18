@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Image, ScrollView, TouchableWithoutFeedback, Modal } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, View, Animated, Dimensions, Text, Image, ScrollView, TouchableWithoutFeedback, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
@@ -13,9 +13,13 @@ import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import LikeButton from '../components/LikeButton';
 import useApi from '../hooks/useApi';
+import AnimatedHeader from '../components/AnimatedHeader';
 
+const { width, height} = Dimensions.get('window');
+const HEADER_HEIGHT = height/2;
+const MIN_HEIHGT = height/5;
 
-function SearchDetailsScreen({route}) {
+function SearchDetailsScreen({route, navigation}) {
 
 // setting states for searching
     const [state, setState] = React.useState({
@@ -53,7 +57,7 @@ function SearchDetailsScreen({route}) {
     // setting variable from selected movie card
     let selectedMovie = state.selected
 
-// logic for opening details of movie card depends what method of searching user will choose: random or common search
+// logic for opening state.selected of movie card depends what method of searching user will choose: random or common search
     if(typeof(searchBlock) !== Object){
         React.useEffect(()=>{
             openPopup(searchBlock.imdbID)
@@ -63,171 +67,237 @@ function SearchDetailsScreen({route}) {
         selectedMovie = searchBlock
     }
 
-// loading fonts
-    const [loaded] = useFonts({
-        YesevaOne: require('../../assets/fonts/YesevaOne.ttf')
-    });
-
-    if (!loaded) {
-        return null;    
-    }
-// function for like button
+    // function for like button
     const handleSubmit = async () =>{
         const result = await moviesApi.addMoviesLiked(selectedMovie)
         if(!result.ok) return alert('Is not working!' + result )
         getMoviesApi.request()
     }   
+
+    const offset = useRef(new Animated.Value(0)).current;
+
+    const scrollMargin = offset .interpolate({
+        inputRange: [0, HEADER_HEIGHT],
+        outputRange: [HEADER_HEIGHT, MIN_HEIHGT],
+        extrapolate: 'clamp'
+    });
+
+    const [loaded] = useFonts({
+        YesevaOne: require('../../assets/fonts/YesevaOne.ttf'),
+        MontserratRegular: require('../../assets/fonts/Montserrat/Montserrat-Regular.ttf'),
+        MontserratMedium: require('../../assets/fonts/Montserrat/Montserrat-Medium.ttf'),
+    });
+
+    if (!loaded) {
+        return null;    
+    }
+
     return (
-        <>
+        <Screen>
             <ActivityIndicator visible={loading}/>
 
-            <View>
-
-                <ScrollView>
-                    <Screen style={styles.container}>
-                        <TouchableWithoutFeedback onPress={()=>{handleOpen()}}>
-                            <View>
-                                {state.selected.Poster ? <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='cover' />: null}
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <LikeButton form size={75} onPress={handleSubmit}/>
-                        <View style={styles.title}>
-                            
-                            <AppText style={styles.titleText}>{state.selected.Title}</AppText>
+            {/* <ScrollView>
+                <Screen style={styles.container}>
+                    <TouchableWithoutFeedback onPress={()=>{handleOpen()}}>
+                        <View>
+                            {state.selected.Poster ? <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='cover' />: null}
                         </View>
-                        <View style={styles.ratingsContainer}>
-                            <FontAwesome style={{fontSize: 50, color: colors.gold}} name={'imdb'}></FontAwesome>
-                            <View style={styles.ratings}>
-                                <AppText style={styles.ratingsText}>{state.selected.imdbRating}</AppText>
-                            </View>
+                    </TouchableWithoutFeedback>
+                    <LikeButton form size={75} onPress={handleSubmit}/>
+                    <View style={styles.title}>
+                        
+                        <AppText style={styles.titleText}>{state.selected.Title}</AppText>
+                    </View>
+                    <View style={styles.ratingsContainer}>
+                        <FontAwesome style={{fontSize: 50, color: colors.gold}} name={'imdb'}></FontAwesome>
+                        <View style={styles.ratings}>
+                            <AppText style={styles.ratingsText}>{state.selected.imdbRating}</AppText>
                         </View>
-                        <View style={styles.plot}>
-                            < AppText style={styles.genreText}>{'Plot: ' + state.selected.Plot}</AppText>
-                        </View>
-                        <View style={styles.time}>
-                            <MaterialCommunityIcons name='calendar-star' color={colors.medium} size ={35}/>
-                            <AppText style={styles.timeText}>{'Released: ' + state.selected.Released}</AppText>
-                            <MaterialCommunityIcons name='timer-sand' color={colors.medium} size ={35}/>
-                            <AppText style={styles.timeText}>{'Runtime: ' + state.selected.Runtime}</AppText>
-                        </View>
+                    </View>
+                    <View style={styles.plot}>
+                        < AppText style={styles.genreText}>{'Plot: ' + state.selected.Plot}</AppText>
+                    </View>
+                    <View style={styles.time}>
+                        <MaterialCommunityIcons name='calendar-star' color={colors.medium} size ={35}/>
+                        <AppText style={styles.timeText}>{'Released: ' + state.selected.Released}</AppText>
+                        <MaterialCommunityIcons name='timer-sand' color={colors.medium} size ={35}/>
+                        <AppText style={styles.timeText}>{'Runtime: ' + state.selected.Runtime}</AppText>
+                    </View>
+                    <View style={styles.genre}>
+                        <AppText style={styles.genreText}>{'Genres: ' + state.selected.Genre}</AppText>
+                    </View>
+                    <View style={styles.time}>
+                        <AppText style={styles.timeText}>{'Languages: ' + state.selected.Language}</AppText>
+                        <AppText style={styles.timeText}>{'Country: ' + state.selected.Country}</AppText>
+                    </View>
+                    <View style={styles.actor}>
+                        <AppText style={styles.timeText}>{'Director: ' + state.selected.Director}</AppText>
+                        <AppText style={styles.timeText}>{'Writer(s): ' + state.selected.Writer}</AppText>
+                        <AppText style={styles.timeText}>{'Actors: ' + state.selected.Actors}</AppText>
+                        <AppText style={styles.timeText}>{'Production: ' + state.selected.Production}</AppText>
+                    </View>
+                    <View style={styles.awardsContainer}>
+                        <MaterialCommunityIcons name='trophy' color={colors.silver} size={40}/>
                         <View style={styles.genre}>
-                            <AppText style={styles.genreText}>{'Genres: ' + state.selected.Genre}</AppText>
+                            <AppText style={styles.genreText}>{state.selected.Awards}</AppText>
+                        </View>           
+                    </View>
+                                    
+                    <Modal animationType='slide' visible={image === true} transparent={true}>
+            
+                        <View style={styles.imageInfo}>
+                            <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='contain'/>
+                            <AppButton onPress={handleClose} title='Go Back' />
                         </View>
-                        <View style={styles.time}>
-                            <AppText style={styles.timeText}>{'Languages: ' + state.selected.Language}</AppText>
-                            <AppText style={styles.timeText}>{'Country: ' + state.selected.Country}</AppText>
+                    </Modal>
+                </Screen>
+            </ScrollView> */}
+
+            <AnimatedHeader 
+                animatedValue={offset} 
+                title={state.selected.Title} 
+                runtime={state.selected.Runtime} 
+                img={state.selected.Poster} 
+                navigation={navigation}
+                onpress={handleSubmit} 
+            />
+            <Animated.ScrollView
+                style={{ 
+                    flex: 1, 
+                    backgroundColor: colors.white, 
+                    marginTop: scrollMargin,
+                    borderTopLeftRadius: 50, 
+                    borderTopRightRadius: 50,
+                    zIndex: 999, 
+                }}
+                contentContainerStyle={{
+                    paddingTop: 40,
+                    paddingHorizontal: 40
+                }}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={1}
+                overScrollMode={'never'}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: offset } } }],
+                    { useNativeDriver: false }
+                )}
+            >
+                <Text style={styles.title}>{state.selected.Title}</Text>
+                <View style={styles.genreBlock}>
+                    {/* {state.selected.Genre.split(', ').map((item, index) => (
+                        <View style={styles.genre} key={index}>
+                            <Text style={styles.genreTitle}>{item}</Text>    
                         </View>
-                        <View style={styles.actor}>
-                            <AppText style={styles.timeText}>{'Director: ' + state.selected.Director}</AppText>
-                            <AppText style={styles.timeText}>{'Writer(s): ' + state.selected.Writer}</AppText>
-                            <AppText style={styles.timeText}>{'Actors: ' + state.selected.Actors}</AppText>
-                            <AppText style={styles.timeText}>{'Production: ' + state.selected.Production}</AppText>
-                        </View>
-                        <View style={styles.awardsContainer}>
-                            <MaterialCommunityIcons name='trophy' color={colors.silver} size={40}/>
-                            <View style={styles.genre}>
-                                <AppText style={styles.genreText}>{state.selected.Awards}</AppText>
-                            </View>           
-                        </View>
-                                        
-                        <Modal animationType='slide' visible={image === true} transparent={true}>
-                
-                            <View style={styles.imageInfo}>
-                                <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='contain'/>
-                                <AppButton onPress={handleClose} title='Go Back' />
-                            </View>
-                        </Modal>
-                    </Screen>
-                </ScrollView>
-            </View>
-        </>
+                    ))} */}
+                </View>
+                <Text style={[styles.font, { color: colors.medium }]}>Runtime: {state.selected.Runtime}</Text>
+                <Text style={[styles.font, { color: colors.medium}]}>IMDb: {state.selected.imdbRating}</Text>
+                <View style={styles.container}>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Plot:{'\n'}</Text>
+                        <Text>{state.selected.Plot}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Actors:{'\n'}</Text>
+                        <Text>{state.selected.Actors}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Country:{'\n'}</Text>
+                        <Text>{state.selected.Country}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Language:{'\n'}</Text>
+                        <Text>{state.selected.Language}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Director:{'\n'}</Text>
+                        <Text>{state.selected.Director}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Production:{'\n'}</Text>
+                        <Text >{state.selected.Production}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Writer:{'\n'}</Text>
+                        <Text >{state.selected.Writer}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Awards:{'\n'}</Text>
+                        <Text >{state.selected.Awards}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Released:{'\n'}</Text>
+                        <Text>{state.selected.Released}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Year:{'\n'}</Text>
+                        <Text>{state.selected.Year}</Text>
+                    </Text>
+                </View>
+            </Animated.ScrollView>
+        </Screen>
     );
 }
 
 const styles = StyleSheet.create({
-    container:{
-        backgroundColor: colors.halfdark,
-        flex: 1
-    },
-    image: {
-        width: "100%",
-        height: 300
-      },
-    title: {
+    navTitleView: {
+        height: MIN_HEIHGT,
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 40,
-        paddingBottom: 20,
-        flex: 1
+        paddingTop: 10,
+        opacity: 0
     },
-    titleText: {
-        fontFamily: 'YesevaOne',
-        fontSize: 35,
-        color: colors.silver
-    },
-    time: {
-        paddingBottom: 35,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    timeText: {
-        fontWeight: '200',
-        color: colors.medium
-    },
-    genre: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1,
-        paddingHorizontal: 15
-    },
-    genreText: {
-        fontWeight: '500',
-        color: colors.whiteGrey ,
-    },
-    plot: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 25,
-        paddingLeft: 15
-    },
-    actor:{
-        paddingLeft: 15,
-        paddingBottom: 35,
-    },
-    awardsContainer:{
-        paddingBottom: 25,
-        alignItems: 'center',
-        flexDirection: 'row',
-        padding: 15,
-    },
-    ratings: {
-        justifyContent: 'center',
-        alignItems: 'center',
-       
-    },
-    ratingsText: {
-        fontSize: 45,
-        color: colors.gold ,
-        paddingHorizontal: 15
+
+    navTitle: {
+        color: colors.white,
+        fontSize: 18,
+        backgroundColor: 'transparent'
     },
     
-    ratingsContainer: {
-        paddingBottom: 25,
-        alignItems: 'center',
-        flexDirection: 'row',
-        padding: 15,
-        justifyContent: 'center',
+    title: {
+        fontFamily: 'YesevaOne',
+        fontSize: 40,
     },
-    imageInfo: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: colors.halfdark,
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
+    
+    section: {
+        padding: 40
+    },
+    
+    font: {
+        fontFamily: 'MontserratRegular',
+        fontSize: 18,
+        color: colors.halfdark,
+        marginVertical: 10
+    },
+    
+    fontBold: {
+        fontFamily: 'MontserratMedium',
+        fontSize: 18
+    },
+
+    genreBlock: {
+        flexDirection: 'row',
+        marginVertical: 10,
+    },
+
+    genre: {
+        marginRight: 5
+    },
+    
+    genreTitle: {
+        fontFamily: 'MontserratRegular',
+        color: colors.medium,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: colors.medium, 
+        borderRadius: 5, 
+        padding: 5
+    },
+
+    container:{
+        flex: 1,
+        backgroundColor: colors.white,
+    },
 })
 
 export default SearchDetailsScreen;

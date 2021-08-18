@@ -64,7 +64,7 @@ export default function SavedScreen({navigation}) {
                   </View>
                   <Card
                     imageUrl={item.Poster}
-                    onPress={() => navigation.navigate('Details', item)}
+                    onPress={() => navigation.navigate('Details', { Details: item })}
                   />
                 </View>
               );

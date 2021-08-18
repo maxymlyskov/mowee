@@ -7,6 +7,7 @@ import {
     Modal,
     Button,
     Text,
+    Animated,
     Dimensions
 } from 'react-native';
 
@@ -23,6 +24,7 @@ import RandomIndicator from '../components/RandomIndicator';
 import moviesApi from '../api/movies';
 import AppTextInput from '../components/AppTextInput';
 import LikeButton from '../components/LikeButton';
+import Screen from '../components/Screen';
 
 const { width, height} = Dimensions.get('window');
 
@@ -124,13 +126,13 @@ function SearchScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <Screen style={styles.container}>
             <RandomIndicator visible={loading} />
 
             <View style={{flex: 1, paddingHorizontal: 40}}>
                 {/* Search Form */}
                 
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 30 }}>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     {/* 
                         <TouchableWithoutFeedback onPress={handleFilter}>
                             <View style={styles.filter}>
@@ -232,7 +234,7 @@ function SearchScreen({ navigation }) {
                     */}
                 </View>
             </View>
-        </View>
+        </Screen>
     );
 }
 

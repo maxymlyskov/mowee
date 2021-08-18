@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Animated, FlatList, StyleSheet, View, Dimensions } from 'react-native';
+import { useFonts } from 'expo-font';
+
 import ActivityIndicator from '../components/ActivityIndicator';
 import AppButton from '../components/AppButton';
 import AppText from '../components/AppText';
-import { useFonts } from 'expo-font';
-
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
@@ -89,7 +89,7 @@ function HomeScreen({ navigation }) {
             
             data={getMoviesApi.data}
             keyExtractor={(movie)=>movie._id}
-            renderItem={({item, index})=> {
+            renderItem={({ item, index }) => {
               return (
                 <Animated.View
                 style={{
@@ -111,9 +111,10 @@ function HomeScreen({ navigation }) {
                 >
                   <CarouselItem
                     title={item.Title}
+                    rating={item.imdbRating}
                     subTitle = {item.Genre}
                     imageUrl={item.Poster}
-                    onPress={() => navigation.navigate('Details', item)}
+                    onPress={() => navigation.navigate('Details', { Details: item })}
                   />
                 </Animated.View>
               );

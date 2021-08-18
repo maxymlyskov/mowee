@@ -1,18 +1,35 @@
-import React from 'react';
-import { View, StyleSheet, Image, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import React, { useRef } from 'react';
+import { 
+    View,
+    StyleSheet, 
+    Image, 
+    ScrollView, 
+    Modal, 
+    Text,
+    TouchableOpacity,
+    Animated,
+    Dimensions
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import StarRating from 'react-native-star-rating-widget';
+import { useFonts } from 'expo-font';
+// import SafeAreaView from 'react-native-safe-area-view';
 
 import AppText from '../components/AppText';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import moviesApi from '../api/movies'
 import AppButton from '../components/AppButton';
+import AnimatedHeader from '../components/AnimatedHeader';
 
-export default function DetailsScreen({route}) {
+const { width, height } = Dimensions.get('window');
+const HEADER_HEIGHT = height/2;
+const MIN_HEIHGT = height/5;
+
+export default function DetailsScreen({ navigation, route}) {
     // getting params from united stack screen
-    const Details = route.params
+    const Details = route.params.Details;
     // states for rating and logic for opening and closing details
     const [rating, setRating] = React.useState(Details.Rating);
     Details.Rating = rating
@@ -23,7 +40,6 @@ export default function DetailsScreen({route}) {
     const handleClose = ()=> {
         setDetails(false)
     }; 
-    
 
     // rating button function
     const handleSubmit = async () =>{
@@ -31,200 +47,170 @@ export default function DetailsScreen({route}) {
         console.log(result)
         if(!result.ok) return alert('Is not working!' + result )
         alert('Rated succesfully!')
-      
+    }
+
+    const offset = useRef(new Animated.Value(0)).current;
+
+    const scrollMargin = offset .interpolate({
+        inputRange: [0, HEADER_HEIGHT],
+        outputRange: [HEADER_HEIGHT, MIN_HEIHGT],
+        extrapolate: 'clamp'
+    });
+
+    const [loaded] = useFonts({
+        YesevaOne: require('../../assets/fonts/YesevaOne.ttf'),
+        MontserratRegular: require('../../assets/fonts/Montserrat/Montserrat-Regular.ttf'),
+    });
+
+    if (!loaded) {
+        return null;
     }
 
     return (
-        <Screen style={styles.container}>
-            <ScrollView>
-                <View>
-                    <Image style={styles.image} resizeMode='cover' source={{uri : Details.Poster}}/>
+        <Screen>
+            <AnimatedHeader 
+                animatedValue={offset} 
+                title={Details.Title} 
+                runtime={Details.Runtime} 
+                img={Details.Poster} 
+                navigation={navigation} 
+                onpress={()=>handleDelete(item)}
+            />
+            <Animated.ScrollView
+                style={{ 
+                    flex: 1, 
+                    backgroundColor: colors.white, 
+                    marginTop: scrollMargin,
+                    borderTopLeftRadius: 50, 
+                    borderTopRightRadius: 50,
+                    zIndex: 999, 
+                }}
+                contentContainerStyle={{
+                    paddingTop: 40,
+                    paddingHorizontal: 40
+                }}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={1}
+                overScrollMode={'never'}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: offset } } }],
+                    { useNativeDriver: false }
+                )}
+            >
+                <Text style={styles.title}>{Details.Title}</Text>
+                <View style={styles.genreBlock}>
+                    {Details.Genre.split(', ').map((item, index) => (
+                        <View style={styles.genre} key={index}>
+                            <Text style={styles.genreTitle}>{item}</Text>    
+                        </View>
+                    ))}
                 </View>
-                <View style={styles.rating}>
-                    <AppText style={styles.textRating}>{'Your ' + Details.Title + ' Rating'}</AppText>
-                    <View style={styles.rating}>
-                        <StarRating
-                            rating={rating}
-                            onChange={setRating}
-                        />
-                    </View>
-                    <AppButton title='Rate it up' onPress={handleSubmit} />
+                <Text style={[styles.font, { color: colors.medium }]}>Runtime: {Details.Runtime}</Text>
+                <Text style={[styles.font, { color: colors.medium}]}>IMDb: {Details.imdbRating}</Text>
+                <View style={styles.container}>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Plot:{'\n'}</Text>
+                        <Text>{Details.Plot}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Actors:{'\n'}</Text>
+                        <Text>{Details.Actors}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Country:{'\n'}</Text>
+                        <Text>{Details.Country}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Language:{'\n'}</Text>
+                        <Text>{Details.Language}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Director:{'\n'}</Text>
+                        <Text>{Details.Director}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Production:{'\n'}</Text>
+                        <Text >{Details.Production}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Writer:{'\n'}</Text>
+                        <Text >{Details.Writer}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Awards:{'\n'}</Text>
+                        <Text >{Details.Awards}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Released:{'\n'}</Text>
+                        <Text>{Details.Released}</Text>
+                    </Text>
+                    <Text style={styles.font}>
+                        <Text style={styles.fontBold}>Year:{'\n'}</Text>
+                        <Text>{Details.Year}</Text>
+                    </Text>
                 </View>
-                <View style={styles.ratingsContainer}>
-                    <FontAwesome style={{fontSize: 50, color: colors.gold}} name={'imdb'}></FontAwesome>
-
-                    <View style={styles.ratings}>
-                        <AppText style={styles.ratingsText}>{Details.imdbRating}</AppText>
-                    </View>
-                </View>
-                <View style={styles.plotContainer}>
-                    <AppText style={styles.textPlot}>{'Plot: ' + Details.Plot}</AppText>
-                </View>
-                <TouchableOpacity onPress={handleOpen}>
-                    <View style={styles.detailsContainer}>
-                        <AppText style={styles.detailsText}>Show Details</AppText>
-                    </View>
-                </TouchableOpacity>
-                <Modal animationType='slide' visible={details === true} transparent={true}>
-                    
-                    <View style={styles.modalContainer}>
-                        <ScrollView>
-                            <View style={styles.time}>
-                                <MaterialCommunityIcons name='calendar-star' color={colors.medium} size ={35}/>
-                                <AppText style={styles.timeText}>{'Released: ' + Details.Released}</AppText>
-                                <MaterialCommunityIcons name='timer-sand' color={colors.medium} size ={35}/>
-                                <AppText style={styles.timeText}>{'Runtime: ' + Details.Runtime}</AppText>
-                            </View>
-                            <View style={styles.genre}>
-                                <AppText style={styles.genreText}>{'Genres: ' + Details.Genre}</AppText>
-                            </View>
-                            <View style={styles.time}>
-                                <AppText style={styles.timeText}>{'Languages: ' + Details.Language}</AppText>
-                                <AppText style={styles.timeText}>{'Country: ' + Details.Country}</AppText>
-                            </View>
-                            <View style={styles.actor}>
-                                <AppText style={styles.timeText}>{'Director: ' + Details.Director}</AppText>
-                                <AppText style={styles.timeText}>{'Writer(s): ' + Details.Writer}</AppText>
-                                <AppText style={styles.timeText}>{'Actors: ' + Details.Actors}</AppText>
-                                <AppText style={styles.timeText}>{'Production: ' + Details.Production}</AppText>
-                            </View>
-                            <View style={styles.awardsContainer}>
-                                <MaterialCommunityIcons name='trophy' color={colors.silver} size={40}/>
-                                <View style={styles.genre}>
-                                    <AppText style={styles.genreText}>{Details.Awards}</AppText>
-                                </View>           
-                            </View>
-                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-
-                                <AppButton onPress={handleClose} title='Go Back' />
-                            </View>                    
-                            
-                        </ScrollView>
-                    </View>
-
-                </Modal>
-            </ScrollView>
+            </Animated.ScrollView>
         </Screen>
-    );
-
-      
+    );  
 }
 
 const styles = StyleSheet.create({
-    image: {
-        width: "100%",
-        height: 300
-      },
+    navTitleView: {
+        height: MIN_HEIHGT,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 10,
+        opacity: 0
+    },
+
+    navTitle: {
+        color: colors.white,
+        fontSize: 18,
+        backgroundColor: 'transparent'
+    },
+    
+    title: {
+        fontFamily: 'YesevaOne',
+        fontSize: 40,
+    },
+    
+    section: {
+        padding: 40
+    },
+    
+    font: {
+        fontFamily: 'MontserratRegular',
+        fontSize: 18,
+        color: colors.halfdark,
+        marginVertical: 10
+    },
+    
+    fontBold: {
+        fontFamily: 'MontserratMedium',
+        fontSize: 18
+    },
+
+    genreBlock: {
+        flexDirection: 'row',
+        marginVertical: 10,
+    },
+
+    genre: {
+        marginRight: 5
+    },
+    
+    genreTitle: {
+        fontFamily: 'MontserratRegular',
+        color: colors.medium,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: colors.medium, 
+        borderRadius: 5, 
+        padding: 5
+    },
+
     container:{
         flex: 1,
-        backgroundColor: colors.halfdark
-        
+        backgroundColor: colors.white,
     },
-    ratings: {
-        justifyContent: 'center',
-        alignItems: 'center',
-       
-    },
-    ratingsText: {
-        fontSize: 45,
-        color: colors.gold ,
-        paddingHorizontal: 15
-    },
-    
-    ratingsContainer: {
-        paddingBottom: 25,
-        alignItems: 'center',
-        flexDirection: 'row',
-        padding: 15,
-        justifyContent: 'center',
-    },
-    plotContainer:{
-        marginLeft: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 50
-    },
-    textPlot:{
-        fontSize: 20,
-        color: colors.light
-    },
-    textRating:{
-        fontSize: 20,
-        color: colors.danger
-    },
-    rating:{
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    detailsContainer:{
-        backgroundColor: colors.purple, 
-        width: '100%',
-        height: 50, 
-        justifyContent: 'center', 
-        alignItems: 'center'},
-    detailsText: {
-        fontSize: 25,
-        color: colors.silver
-    },
-    modalContainer: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: colors.halfdark,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    time: {
-        paddingBottom: 35,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    timeText: {
-        fontWeight: '200',
-        color: colors.medium
-    },
-    genre: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1,
-        paddingHorizontal: 15,
-        marginBottom: 10
-    },
-    genreText: {
-        fontWeight: '500',
-        color: colors.whiteGrey ,
-        
-    },
-   
-    actor:{
-        paddingLeft: 15,
-        paddingBottom: 35,
-    },
-    awardsContainer:{
-        paddingBottom: 25,
-        alignItems: 'center',
-        flexDirection: 'row',
-        padding: 15,
-    },
-    ratings: {
-        justifyContent: 'center',
-        alignItems: 'center',
-       
-    },
-    ratingsText: {
-        fontSize: 45,
-        color: colors.gold ,
-        paddingHorizontal: 15
-    },
-    
-    ratingsContainer: {
-        paddingBottom: 25,
-        alignItems: 'center',
-        flexDirection: 'row',
-        padding: 15,
-        justifyContent: 'center',
-    }
-    
 })
