@@ -1,17 +1,12 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, Animated, Dimensions, Text, Image, ScrollView, TouchableWithoutFeedback, Modal } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, View, Animated, Dimensions, Text} from 'react-native';
 import { useFonts } from 'expo-font';
 import moviesApi from '../api/movies'
 
 import Screen from '../components/Screen';
-import AppText from '../components/AppText';
 import axios from 'axios';
 import colors from '../config/colors';
-import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
-import LikeButton from '../components/LikeButton';
 import useApi from '../hooks/useApi';
 import AnimatedHeader from '../components/AnimatedHeader';
 
@@ -95,64 +90,6 @@ function SearchDetailsScreen({route, navigation}) {
     return (
         <Screen>
             <ActivityIndicator visible={loading}/>
-
-            {/* <ScrollView>
-                <Screen style={styles.container}>
-                    <TouchableWithoutFeedback onPress={()=>{handleOpen()}}>
-                        <View>
-                            {state.selected.Poster ? <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='cover' />: null}
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <LikeButton form size={75} onPress={handleSubmit}/>
-                    <View style={styles.title}>
-                        
-                        <AppText style={styles.titleText}>{state.selected.Title}</AppText>
-                    </View>
-                    <View style={styles.ratingsContainer}>
-                        <FontAwesome style={{fontSize: 50, color: colors.gold}} name={'imdb'}></FontAwesome>
-                        <View style={styles.ratings}>
-                            <AppText style={styles.ratingsText}>{state.selected.imdbRating}</AppText>
-                        </View>
-                    </View>
-                    <View style={styles.plot}>
-                        < AppText style={styles.genreText}>{'Plot: ' + state.selected.Plot}</AppText>
-                    </View>
-                    <View style={styles.time}>
-                        <MaterialCommunityIcons name='calendar-star' color={colors.medium} size ={35}/>
-                        <AppText style={styles.timeText}>{'Released: ' + state.selected.Released}</AppText>
-                        <MaterialCommunityIcons name='timer-sand' color={colors.medium} size ={35}/>
-                        <AppText style={styles.timeText}>{'Runtime: ' + state.selected.Runtime}</AppText>
-                    </View>
-                    <View style={styles.genre}>
-                        <AppText style={styles.genreText}>{'Genres: ' + state.selected.Genre}</AppText>
-                    </View>
-                    <View style={styles.time}>
-                        <AppText style={styles.timeText}>{'Languages: ' + state.selected.Language}</AppText>
-                        <AppText style={styles.timeText}>{'Country: ' + state.selected.Country}</AppText>
-                    </View>
-                    <View style={styles.actor}>
-                        <AppText style={styles.timeText}>{'Director: ' + state.selected.Director}</AppText>
-                        <AppText style={styles.timeText}>{'Writer(s): ' + state.selected.Writer}</AppText>
-                        <AppText style={styles.timeText}>{'Actors: ' + state.selected.Actors}</AppText>
-                        <AppText style={styles.timeText}>{'Production: ' + state.selected.Production}</AppText>
-                    </View>
-                    <View style={styles.awardsContainer}>
-                        <MaterialCommunityIcons name='trophy' color={colors.silver} size={40}/>
-                        <View style={styles.genre}>
-                            <AppText style={styles.genreText}>{state.selected.Awards}</AppText>
-                        </View>           
-                    </View>
-                                    
-                    <Modal animationType='slide' visible={image === true} transparent={true}>
-            
-                        <View style={styles.imageInfo}>
-                            <Image style={styles.image} source={{uri: state.selected.Poster}} resizeMode='contain'/>
-                            <AppButton onPress={handleClose} title='Go Back' />
-                        </View>
-                    </Modal>
-                </Screen>
-            </ScrollView> */}
-
             <AnimatedHeader 
                 animatedValue={offset} 
                 title={state.selected.Title} 
@@ -160,6 +97,7 @@ function SearchDetailsScreen({route, navigation}) {
                 img={state.selected.Poster} 
                 navigation={navigation}
                 onpress={handleSubmit} 
+                formLike
             />
             <Animated.ScrollView
                 style={{ 
@@ -184,11 +122,6 @@ function SearchDetailsScreen({route, navigation}) {
             >
                 <Text style={styles.title}>{state.selected.Title}</Text>
                 <View style={styles.genreBlock}>
-                    {/* {state.selected.Genre.split(', ').map((item, index) => (
-                        <View style={styles.genre} key={index}>
-                            <Text style={styles.genreTitle}>{item}</Text>    
-                        </View>
-                    ))} */}
                 </View>
                 <Text style={[styles.font, { color: colors.medium }]}>Runtime: {state.selected.Runtime}</Text>
                 <Text style={[styles.font, { color: colors.medium}]}>IMDb: {state.selected.imdbRating}</Text>

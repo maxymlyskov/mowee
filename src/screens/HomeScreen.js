@@ -114,7 +114,7 @@ function HomeScreen({ navigation }) {
                     rating={item.imdbRating}
                     subTitle = {item.Genre}
                     imageUrl={item.Poster}
-                    onPress={() => navigation.navigate('Details', { Details: item })}
+                    onPress={() => navigation.navigate('Details',  item )}
                   />
                 </Animated.View>
               );

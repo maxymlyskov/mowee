@@ -55,15 +55,27 @@ function RatedScreen({navigation}) {
                             250 * index,
                             250 * (index + 2)
                         ]
+                        const opacityRange= [
+                            -1,
+                            0,
+                            250 * index,
+                            250 * (index + .8)
+                        ]
 
                         const scale = scrollY.interpolate({
                             inputRange,
                             outputRange: [1, 1, 1, 0]
-                        })                    
+                        })     
+                        const opacity = scrollY.interpolate({
+                            inputRange: opacityRange,
+                            outputRange: [1, 1, 1, 0]
+                        })     
+
                         return (
                             <Animated.View style = {{flex: 1,
                                 width: '100%',
                                 padding: 10,
+                                opacity,
                                 backgroundColor: colors.whiteGrey,
                                 justifyContent: 'center',
                                 alignItems: 'center',transform: [{scale}]}}>
@@ -73,7 +85,6 @@ function RatedScreen({navigation}) {
                                             imageUrl={item.Poster}
                                             imdbRating={item.imdbRating}
                                             rating={item.Rating}
-                                            buttonTitle='Rate'
                                             onPressButton={() => navigation.navigate('Details', item)}
                                             onPress={() => navigation.navigate('Details', item)}
                                             />

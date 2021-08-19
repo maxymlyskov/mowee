@@ -36,12 +36,12 @@ export default function CarouselItem({ title, rating, subTitle, imageUrl, onPres
           {imageUrl ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />: null}
         </View>
         <View style={styles.detailsContainer}>
-          <View style={{flexDirection: 'row'}}>
+        {rating?<View style={{flexDirection: 'row'}}>
             <FontAwesome style={{fontSize: 20, color: colors.medium, marginRight: 5}} name={'imdb'}></FontAwesome>
             <Text style={styles.subTitle}>
               {rating}
             </Text>
-          </View>
+          </View>: null} 
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text> 

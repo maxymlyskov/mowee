@@ -2,25 +2,18 @@ import React, { useRef } from 'react';
 import { 
     View,
     StyleSheet, 
-    Image, 
-    ScrollView, 
-    Modal, 
     Text,
-    TouchableOpacity,
     Animated,
     Dimensions
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import StarRating from 'react-native-star-rating-widget';
 import { useFonts } from 'expo-font';
-// import SafeAreaView from 'react-native-safe-area-view';
 
 import AppText from '../components/AppText';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import moviesApi from '../api/movies'
-import AppButton from '../components/AppButton';
+import RandomButton from '../components/RandomButton';
 import AnimatedHeader from '../components/AnimatedHeader';
 
 const { width, height } = Dimensions.get('window');
@@ -29,17 +22,16 @@ const MIN_HEIHGT = height/5;
 
 export default function DetailsScreen({ navigation, route}) {
     // getting params from united stack screen
-    const Details = route.params.Details;
-    // states for rating and logic for opening and closing details
+    const Details = route.params;
+    // states for rating
     const [rating, setRating] = React.useState(Details.Rating);
     Details.Rating = rating
-    const [details, setDetails] = React.useState(false)
-    const handleOpen = ()=> {
-        setDetails(true)
-    };  
-    const handleClose = ()=> {
-        setDetails(false)
-    }; 
+    // function for like button (deleting)
+  const handleDelete = async (movie) =>{
+    const result = await moviesApi.deleteMovie(movie)
+    if(!result.ok) return alert('Is not working!' + result )
+    getMoviesApi.request()
+  } 
 
     // rating button function
     const handleSubmit = async () =>{
@@ -74,7 +66,8 @@ export default function DetailsScreen({ navigation, route}) {
                 runtime={Details.Runtime} 
                 img={Details.Poster} 
                 navigation={navigation} 
-                onpress={()=>handleDelete(item)}
+                form={true}
+                onpress={()=>handleDelete(Details)}
             />
             <Animated.ScrollView
                 style={{ 
@@ -104,6 +97,16 @@ export default function DetailsScreen({ navigation, route}) {
                             <Text style={styles.genreTitle}>{item}</Text>    
                         </View>
                     ))}
+                </View>
+                <View style={styles.rating}>
+                        <StarRating
+                            rating={rating}
+                            onChange={setRating}
+                            color={colors.black}
+                        />
+                        <View style={{bottom: Dimensions.get('window').height/40}}>
+                            <RandomButton title='Rate' onPress={handleSubmit} />
+                        </View>
                 </View>
                 <Text style={[styles.font, { color: colors.medium }]}>Runtime: {Details.Runtime}</Text>
                 <Text style={[styles.font, { color: colors.medium}]}>IMDb: {Details.imdbRating}</Text>
@@ -172,6 +175,17 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'YesevaOne',
         fontSize: 40,
+    },
+    rating:{
+        // left: Dimensions.get('window').width/10,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    ratingButton:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 10
+
     },
     
     section: {

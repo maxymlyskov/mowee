@@ -11,7 +11,7 @@ const { width, height } = Dimensions.get('window');
 const HEADER_HEIGHT = height/2 + 50;
 const MIN_HEIHGT = height/10;
 
-export default function AnimatedHeader({ animatedValue, title, runtime, img, navigation, onpress }) {
+export default function AnimatedHeader({ animatedValue, title, runtime, img, navigation, onpress, formLike}) {
   const insets = useSafeAreaInsets();
 
   const headerHeight = animatedValue .interpolate({
@@ -47,7 +47,7 @@ export default function AnimatedHeader({ animatedValue, title, runtime, img, nav
           <Animated.Text style={[styles.subTitle, { opacity: textOpacity }]}>Runtime: {runtime}</Animated.Text>
         </View>
         <View style={{flex: 1, alignItems: 'flex-end'}}>
-          <LikeButton size={30} onPress={onpress} />
+          <LikeButton form={formLike} size={30} onPress={onpress} />
         </View>
       </View>
     </Animated.View>
