@@ -15,6 +15,7 @@ import colors from '../config/colors';
 import moviesApi from '../api/movies'
 import RandomButton from '../components/RandomButton';
 import AnimatedHeader from '../components/AnimatedHeader';
+import { TouchableWithoutFeedback } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const HEADER_HEIGHT = height/2;
@@ -98,15 +99,23 @@ export default function DetailsScreen({ navigation, route}) {
                         </View>
                     ))}
                 </View>
+
                 <View style={styles.rating}>
+                    <View style={{flex: 1}}>
                         <StarRating
                             rating={rating}
                             onChange={setRating}
-                            color={colors.black}
+                            color={colors.silver}
                         />
-                        <View style={{bottom: Dimensions.get('window').height/40}}>
-                            <RandomButton title='Rate' onPress={handleSubmit} />
-                        </View>
+                    </View>
+                    <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end'}}>
+                        <TouchableWithoutFeedback onPress={handleSubmit}>
+                            <View style={styles.genre}>
+                                <Text style={styles.genreTitle}>Rate</Text>    
+                            </View>
+                        </TouchableWithoutFeedback>
+                        {/* <RandomButton title='Rate' onPress={handleSubmit} /> */}
+                    </View>
                 </View>
                 <Text style={[styles.font, { color: colors.medium }]}>Runtime: {Details.Runtime}</Text>
                 <Text style={[styles.font, { color: colors.medium}]}>IMDb: {Details.imdbRating}</Text>
@@ -177,15 +186,8 @@ const styles = StyleSheet.create({
         fontSize: 40,
     },
     rating:{
-        // left: Dimensions.get('window').width/10,
         flexDirection: 'row',
-        alignItems: 'center'
-    },
-    ratingButton:{
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 10
-
     },
     
     section: {
@@ -220,7 +222,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.medium, 
         borderRadius: 5, 
-        padding: 5
+        paddingVertical: 5,
+        paddingHorizontal: 10
     },
 
     container:{

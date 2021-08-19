@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Animated, FlatList, StyleSheet, View, Dimensions } from 'react-native';
-import { useFonts } from 'expo-font';
+import { Animated, FlatList, StyleSheet, View, Dimensions, Text } from 'react-native';
 
-import ActivityIndicator from '../components/ActivityIndicator';
 import AppButton from '../components/AppButton';
 import AppText from '../components/AppText';
+
+import ActivityIndicator from '../components/ActivityIndicator';
+import Header from '../components/Header';
+import CarouselItem from '../components/CarouselItem';
+import NoLiked from '../components/NoLiked';
+
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
-import Header from '../components/Header';
-import CarouselItem from '../components/CarouselItem';
 
 const {width, height} = Dimensions.get('window'); // getting width and height of the app's window 
 
@@ -45,18 +47,16 @@ function HomeScreen({ navigation }) {
     );
   }
 
-  // loading fonts
-  const [loaded] = useFonts({
-    MontserratBold: require('../../assets/fonts/Montserrat/Montserrat-Bold.ttf'),
-  });
+  let visible = false;
 
-  if (!loaded) {
-    return null;
+  if (getMoviesApi.data.length === 0) {
+    visible=true;
   }
   
   return (
     <View style={[styles.screen]}>
       <ActivityIndicator visible={getMoviesApi.loading }/>
+
       <View style={{ flex: 1 }}>
         <Header navigation={navigation} />
         {getMoviesApi.error &&
@@ -64,10 +64,14 @@ function HomeScreen({ navigation }) {
           <AppText>Couldn't retrieve the listings</AppText>
           <AppButton title='Retry' onPress={getMoviesApi.request()}/>
         </>}
+        
         <View style={{flex: 10}}>
           <View style={styles.liked}>
-            <AppText style={styles.likedText}>Recent:</AppText>
+            <AppText style={styles.likedText}>Recently raited:</AppText>
           </View>
+
+          <NoLiked navigation={navigation} visible={visible}/>
+
           <Animated.FlatList
             horizontal
             pagingEnabled

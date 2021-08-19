@@ -15,6 +15,9 @@ import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
 import LikeButton from '../components/LikeButton';
 import Header from '../components/Header';
+import NoLiked from '../components/NoLiked';
+import { ScrollView } from 'react-native';
+import { RefreshControl } from 'react-native';
 
 const height = Dimensions.get('window').height;
 
@@ -36,6 +39,12 @@ export default function SavedScreen({navigation}) {
     if(!result.ok) return alert('Is not working!' + result )
     getMoviesApi.request()
   } 
+
+  let visible = false;
+
+  if (getMoviesApi.data.length === 0) {
+    visible=true;
+  }
     
   return (
     <View style={styles.screen}>
@@ -50,7 +59,9 @@ export default function SavedScreen({navigation}) {
           </>
         }
         
-        <View style={{flex: 10, paddingHorizontal: 40}}>
+        <View style={{flex: 10}}>
+          <NoLiked navigation={navigation} visible={visible}/>
+          
           <FlatList
             showsVerticalScrollIndicator={false}
 
@@ -64,7 +75,7 @@ export default function SavedScreen({navigation}) {
                   </View>
                   <Card
                     imageUrl={item.Poster}
-                    onPress={() => navigation.navigate('Details', { Details: item })}
+                    onPress={() => navigation.navigate('Details', item)}
                   />
                 </View>
               );
@@ -88,7 +99,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteGrey,
   },
   flatlist: {
-    flex: 1
+    flex: 1, 
+    paddingHorizontal: 40
   },
   cardContainer: {
     flex: 0.5, 
