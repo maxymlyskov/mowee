@@ -1,10 +1,19 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useFonts } from 'expo-font';
 import colors from '../config/colors'
 
-function AppButton({title, onPress, color = 'danger'}) {
+function AppButton({title, onPress, color= 'silver'}) {
+    const [loaded] = useFonts({
+        YesevaOne: require('../../assets/fonts/YesevaOne.ttf'),
+    });
+    
+    if (!loaded) {
+        return null;
+    }
+
     return (
-        <TouchableOpacity style={[styles.button , {backgroundColor: colors[color]}]} onPress={onPress} >
+        <TouchableOpacity style={styles.button} onPress={onPress} >
             <Text style={styles.text}>{title}</Text>
         </TouchableOpacity>
     );
@@ -12,19 +21,19 @@ function AppButton({title, onPress, color = 'danger'}) {
 
 const styles = StyleSheet.create({
     button:{
-        backgroundColor: colors.blue,
-        borderRadius: 50,
+        backgroundColor: colors.whiteGrey,
+        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center' ,   
         padding: 15,
-        width: '80%',
-        marginVertical: 10,
-        paddingHorizontal: 25
+        paddingHorizontal: 25,
+        borderWidth: 1,
+        borderColor: colors.black
     }, 
     text: {
-        fontSize:24,
-        color: colors.white,
-        fontWeight: 'bold',
+        fontFamily: 'YesevaOne',
+        fontSize: 30,
+        color: colors.black,
     }
 })
 

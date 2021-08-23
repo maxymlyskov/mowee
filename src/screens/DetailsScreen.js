@@ -39,7 +39,6 @@ export default function DetailsScreen({ navigation, route}) {
         const result = await moviesApi.putMovies(Details)
         console.log(result)
         if(!result.ok) return alert('Is not working!' + result )
-        alert('Rated succesfully!')
     }
 
     const offset = useRef(new Animated.Value(0)).current;
