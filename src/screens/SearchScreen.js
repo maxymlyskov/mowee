@@ -116,13 +116,6 @@ function SearchScreen({ navigation }) {
         const result = await moviesApi.addMovies(movie)
         console.log(movie)
         if(!result.ok) return alert('Is not working!' + result.originalError )
-    } 
-
-    // setting states for filtering 
-    const [filter, setFilter] = React.useState(false)
-
-    const handleFilter = () =>{
-        setFilter(true)
     }
 
     return (
@@ -130,16 +123,8 @@ function SearchScreen({ navigation }) {
             <RandomIndicator visible={loading} />
 
             <View style={{flex: 1, paddingHorizontal: 40}}>
-                {/* Search Form */}
                 
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    {/* 
-                        <TouchableWithoutFeedback onPress={handleFilter}>
-                            <View style={styles.filter}>
-                                <Icon iconColor={colors.black} backgroundColor={colors.white} size={35} name='filter-variant'/>     
-                            </View>  
-                        </TouchableWithoutFeedback> 
-                    */}
+                <View style={{flex:2.5, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     
                     <AppForm initialValues={{search: ''}} >                
                         <AppFormField
@@ -157,7 +142,6 @@ function SearchScreen({ navigation }) {
                     </AppForm>
                 </View>
 
-                {/* Content */}
 
                 <View style={{flex: 10}}> 
                     <FlatList
@@ -172,9 +156,6 @@ function SearchScreen({ navigation }) {
                                         <View style={styles.shadow} />
                                     </View>
                                     <View style={{flex: 1, width: '100%', height: '100%', zIndex: 1}}>
-                                        <View style={styles.likeButton}>
-                                            <LikeButton form size={25} onPress={handleSubmit} />
-                                        </View>
                                         <Card
                                             title={item.Title}
                                             subTitle={`Year ${item.Year}`}
@@ -213,24 +194,6 @@ function SearchScreen({ navigation }) {
                         </View>
                     </Modal>
                     
-                    {/*
-                        <Modal 
-                            animationType='fade' 
-                            onRequestClose={()=>setFilter(false)} 
-                            dismiss={()=>setFilter(false)} 
-                            transparent={true} 
-                            visible={filter}>
-                            <View style={styles.modal}>
-                                <AppTextInput 
-                                    icon='counter' 
-                                    placeholder='Year of release' 
-                                    width='80%' 
-                                    onChangeText={text=>setYears(text)} 
-                                    onSubmitEditing={()=>{setFilter(false); search()}}
-                                />
-                            </View>
-                        </Modal>
-                    */}
                 </View>
             </View>
         </Screen>

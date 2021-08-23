@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import RatedItem from '../components/RatedItem';
 import StarRating from 'react-native-star-rating';
 import AppButton from '../components/AppButton';
+import NoLiked from '../components/NoLiked';
 
 function RatedScreen({navigation}) {
     
@@ -25,6 +26,11 @@ function RatedScreen({navigation}) {
   }, [])
 
   const scrollY = useRef(new Animated.Value(0)).current
+  let visible = false;
+
+  if (getMoviesApi.data.length === 0) {
+    visible=true;
+  }
   
 
     return (
@@ -32,6 +38,7 @@ function RatedScreen({navigation}) {
             <ActivityIndicator visible={getMoviesApi.loading}/>
             <Screen style={styles.conatiner}>
                 <Header navigation={navigation} />
+                <NoLiked navigation={navigation} visible={visible && !getMoviesApi.loading}/>
                 {getMoviesApi.error &&
                 <>
                 <AppText>Couldn't retrieve the listings</AppText>

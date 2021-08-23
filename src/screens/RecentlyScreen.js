@@ -11,6 +11,7 @@ import Header from '../components/Header'
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
+import NoLiked from '../components/NoLiked';
 
 
 function RecentlyScreen({navigation}) {
@@ -24,6 +25,11 @@ function RecentlyScreen({navigation}) {
     }, [])
 
     const scrollY = useRef(new Animated.Value(0)).current
+
+    let visible = false
+    if (getMoviesApi.data.length === 0) {
+        visible=true;
+      }
     
     return (
         <>
@@ -31,6 +37,7 @@ function RecentlyScreen({navigation}) {
             <Screen style={styles.screen}>
 
             <Header navigation={navigation} />
+            <NoLiked navigation={navigation} visible={visible && !getMoviesApi.loading}/>
                 {getMoviesApi.error &&
                     <>
                         <AppText>Couldn't retrieve the listings</AppText>
@@ -62,7 +69,7 @@ function RecentlyScreen({navigation}) {
                             <Animated.View style={{ flex: 1,
                                                     width: '100%',
                                                     height: Dimensions.get('window').height/1.5,
-                                                    backgroundColor: colors.white,
+                                                    backgroundColor: colors.whiteGrey,
                                                     padding: 0, 
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
@@ -92,8 +99,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: Dimensions.get('window').height/1.5,
-        backgroundColor: colors.white,
-        padding: 15, 
+        backgroundColor: colors.whiteGrey,
         justifyContent: 'center',
     }
 })

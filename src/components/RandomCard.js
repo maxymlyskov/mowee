@@ -25,7 +25,6 @@ function RandomCard({ title, subTitle, imageUrl, onPress }) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.RandomCard}>
-        {/* <Image style={styles.image} preview={{uri: thumbnailUrl}} uri={imageUrl} tint='light' /> */}
         {imageUrl  ? <Image style={styles.image} source={{uri: imageUrl}} resizeMode='cover' />:null}
         <View style={styles.detailsContainer}>
           <Text style={styles.title} numberOfLines={1}>

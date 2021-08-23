@@ -66,8 +66,6 @@ export default function DetailsScreen({ navigation, route}) {
                 runtime={Details.Runtime} 
                 img={Details.Poster} 
                 navigation={navigation} 
-                form={true}
-                onpress={()=>handleDelete(Details)}
             />
             <Animated.ScrollView
                 style={{ 

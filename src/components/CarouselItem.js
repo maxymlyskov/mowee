@@ -14,7 +14,7 @@ import colors from "../config/colors";
 
 const width = Dimensions.get('window').width;
 
-export default function CarouselItem({ title, rating, subTitle, imageUrl, onPress, thumbnailUrl }) {
+export default function CarouselItem({ title, rating, subTitle, imageUrl, onPress }) {
   // getting fonts
 
   const [loaded] = useFonts({

@@ -12,6 +12,7 @@ import NoLiked from '../components/NoLiked';
 import colors from '../config/colors';
 import moviesApi from '../api/movies';
 import useApi from '../hooks/useApi';
+import LikeButton from '../components/LikeButton';
 
 const {width, height} = Dimensions.get('window'); // getting width and height of the app's window 
 
@@ -46,7 +47,12 @@ function HomeScreen({ navigation }) {
       />
     );
   }
-
+// function for like button (deleting)
+const handleDelete = async (movie) =>{
+  const result = await moviesApi.deleteMovie(movie)
+  if(!result.ok) return alert('Is not working!' + result )
+  getMoviesApi.request()
+} 
   let visible = false;
 
   if (getMoviesApi.data.length === 0) {
@@ -70,7 +76,7 @@ function HomeScreen({ navigation }) {
             <AppText style={styles.likedText}>Recently raited:</AppText>
           </View>
 
-          <NoLiked navigation={navigation} visible={visible}/>
+          <NoLiked navigation={navigation} visible={visible && !getMoviesApi.loading}/>
 
           <Animated.FlatList
             horizontal
@@ -120,6 +126,9 @@ function HomeScreen({ navigation }) {
                     imageUrl={item.Poster}
                     onPress={() => navigation.navigate('Details',  item )}
                   />
+                  <View style={styles.liked}>
+                    <LikeButton size={35} form={!item.Liked} onPress={()=>handleDelete(item)}/>
+                  </View>
                 </Animated.View>
               );
             }}
@@ -155,6 +164,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginHorizontal: 40,
     marginBottom: 30
+  },
+  liked:{
+      zIndex: 1,
+      bottom: Dimensions.get('window').height/2,
+      left: Dimensions.get('window').width/3.5
   }
 })
 

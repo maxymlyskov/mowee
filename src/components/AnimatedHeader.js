@@ -46,9 +46,9 @@ export default function AnimatedHeader({ animatedValue, title, runtime, img, nav
           <Animated.Text style={[styles.title, { opacity: textOpacity }]}>{title}</Animated.Text>
           <Animated.Text style={[styles.subTitle, { opacity: textOpacity }]}>Runtime: {runtime}</Animated.Text>
         </View>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
+        {onpress ?<View style={{flex: 1, alignItems: 'flex-end'}}>
           <LikeButton form={formLike} size={30} onPress={onpress} />
-        </View>
+        </View>: null}
       </View>
     </Animated.View>
   );

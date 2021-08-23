@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 40,
     paddingVertical: 30,
+    backgroundColor: colors.whiteGrey
   },
   titleBlock: {
     flex: 1,
