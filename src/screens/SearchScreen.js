@@ -201,7 +201,7 @@ function SearchScreen({ navigation }) {
                             <RandomButton title='RANDOM' onPress={handleOpen}/>
                         </View>
                     : null}
-                    <Modal animationType='fade' transparent={true} visible={random}>
+                    <Modal animationType='fade' transparent={true} visible={random} onRequestClose={()=>setRandom(false)}>
                         <RandomCard
                             title={randomS.results.Title}
                             subTitle={`Year ${randomS.results.Year}`}
@@ -209,8 +209,7 @@ function SearchScreen({ navigation }) {
                             onPress={() => {navigation.navigate('SearchDetails', randomS.results); handleClose()}}
                         />
                         <View style={styles.randomContainer}>
-                            <AppButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
-                            <AppButton title='BACK' onPress={handleClose}/>
+                            <RandomButton color={colors.blue} title=' ANOTHER MOVIE' onPress={searchRandom}/>
                         </View>
                     </Modal>
                     
@@ -279,9 +278,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     randomContainer: {
-        backgroundColor: colors.halfdark,
+        backgroundColor: colors.white,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 75
     },
     randomButton: {
         flex: 1,

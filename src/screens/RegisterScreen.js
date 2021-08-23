@@ -12,6 +12,7 @@ import useAuth from '../auth/useAuth';
 import useApi from '../hooks/useApi';
 import authApi from '../api/auth'
 import usersApi from '../api/users'
+import { ImageBackground } from 'react-native';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required().label("Name"),
@@ -86,7 +87,7 @@ const {data: authToken} = await loginApi.request(
                 <SubmitButton title='Register' />
             </View>
         </AppForm>
-            <Image style={styles.logo} source={require('../../assets/icon.png')} />
+            {/* <Image style={styles.logo} source={require('../../assets/icon.png')} /> */}
         </Screen>
         </>
     );
@@ -95,7 +96,8 @@ const {data: authToken} = await loginApi.request(
 const styles = StyleSheet.create({
     container:{
         padding: 10,
-        backgroundColor: colors.halfdark,
+        backgroundColor: colors.whiteGrey,
+        flex: 1
     },
     logo:{
         alignSelf: 'center',
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
         borderRadius: 40
     },
     button:{
-        alignItems: 'center'
+        paddingHorizontal: 30
     }
 })
 

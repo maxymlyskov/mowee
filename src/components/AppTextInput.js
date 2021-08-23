@@ -16,7 +16,7 @@ function AppTextInput({icon,width='100%' , ...otherProps}) {
 
     return (
         <View style={[styles.container, {width}]}>
-            <TextInput placeholderTextColor={defaultStyles.colors.medium} style={styles.textInput} {...otherProps}/>
+            <TextInput placeholderTextColor={defaultStyles.colors.silver} style={styles.textInput} {...otherProps}/>
             {icon && <MaterialCommunityIcons name={icon} size={30} style={styles.icon} color={defaultStyles.colors.black}/>}
         </View>
     );
@@ -25,10 +25,9 @@ function AppTextInput({icon,width='100%' , ...otherProps}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: defaultStyles.colors.whte,
         flexDirection: 'row',
         alignItems: 'center',
-        // paddingVertical: 10,
+        padding: 10,
     },
 
     textInput: {
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
         fontFamily: 'MontserratMedium',
         fontSize: 16,
         padding: 10,
-        borderBottomColor: '#000',
+        borderBottomColor: defaultStyles.colors.black,
         borderBottomWidth: 1,
     },
 

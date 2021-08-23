@@ -7,15 +7,18 @@ import Screen from '../components/Screen';
 
 function WelcomeScreen({navigation}) {
     return (     
-        <ImageBackground blurRadius={10} style={styles.background} source={require('../../assets/splash.png')}>
-            <View style={styles.logoContainer}>
+        <ImageBackground blurRadius={0} style={styles.background} source={require('../../assets/wallpaper.jpg')}>
+            {/* <View style={styles.logoContainer}>
             <Image style={styles.logo} source={require('../../assets/icon.png')}></Image>
             <Text style={styles.tagline}>Mowee</Text>
-            </View>
+            </View> */}
             <View style={styles.buttonContainer}>
-            <AppButton title='Login' onPress = {()=> navigation.navigate('Login')}/>
-            <AppButton title='Register' color='secondary' onPress={()=> navigation.navigate('Register')}/>
-             </View>
+                <AppButton title='Login' onPress = {()=> navigation.navigate('Login')}/>
+            </View>
+            <View style={styles.buttonContainerLogin}>
+                <AppButton title='Register' onPress={()=> navigation.navigate('Register')}/>
+            </View>
+
         </ImageBackground>        
     )
 }
@@ -42,9 +45,17 @@ const styles = StyleSheet.create({
    },
 
     buttonContainer:{
-        padding: 20,
+        padding: 10,
+        paddingHorizontal:30,
         width: '100%',
-        alignItems: 'center'
+    }
+   ,
+
+    buttonContainerLogin:{
+        
+        paddingBottom: 20,
+        paddingHorizontal:30,
+        width: '100%',
     }
 })
 

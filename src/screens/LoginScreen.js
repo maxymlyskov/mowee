@@ -7,6 +7,8 @@ import useAuth from '../auth/useAuth'
 
 import Screen from '../components/Screen';
 import{ AppFormField, AppForm, ErrorMessage, SubmitButton } from '../components/forms'
+import { Dimensions } from 'react-native';
+import { ImageBackground } from 'react-native';
 
 
 // email and password validation
@@ -30,8 +32,8 @@ const handleSubmit = async ({email, password})=>{
 }
 
     return (
-        <Screen style={styles.container}>
-            <Image style={styles.logo} source={require('../../assets/icon.png')} />
+        <Screen style={styles.container} >
+            {/* <Image style={styles.logo} source={require('../../assets/icon.png')} /> */}
 
             <AppForm initialValues={{email:'', password:''}} 
             validationSchema={validationSchema} 
@@ -66,9 +68,11 @@ const handleSubmit = async ({email, password})=>{
 
 const styles = StyleSheet.create({
     container:{
-        padding: 10,
-        backgroundColor: colors.halfdark,
-        justifyContent:'center'
+        padding: 20,
+        backgroundColor: colors.whiteGrey,
+        justifyContent:'center',
+        flex: 1,
+
     },
     logo:{
         alignSelf: 'center',
@@ -79,7 +83,8 @@ const styles = StyleSheet.create({
         borderRadius: 50
     },
     button:{
-        alignItems: 'center'
+        paddingHorizontal: 20,
+        marginTop: Dimensions.get('window').height/10
     }
 })
 

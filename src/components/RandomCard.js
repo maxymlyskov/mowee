@@ -43,7 +43,7 @@ function RandomCard({ title, subTitle, imageUrl, onPress }) {
 
 const styles = StyleSheet.create({
   RandomCard: {
-    backgroundColor: colors.darkblue,
+    backgroundColor: colors.white,
     marginBottom: 10,
     overflow: "hidden",
     flex: 1
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 350,
+    height: 400,
   },
   subTitle: {
     color: colors.medium,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     fontFamily: 'YesevaOne',
     marginBottom: 7,
     fontSize: 30,
-    color: colors.light, 
+    color: colors.black, 
   },
 });
 

@@ -2,7 +2,7 @@ import { create } from "apisauce";
 import authStorage from '../auth/storage'
 
 const apiClient = create({
-  baseURL: "http://192.168.0.104:19002/api",
+  baseURL: "https://sheltered-ridge-77911.herokuapp.com/api",
 });
 
 apiClient.addAsyncRequestTransform(async(request)=>{
