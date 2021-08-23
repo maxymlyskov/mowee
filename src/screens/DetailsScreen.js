@@ -28,11 +28,11 @@ export default function DetailsScreen({ navigation, route}) {
     const [rating, setRating] = React.useState(Details.Rating);
     Details.Rating = rating
     // function for like button (deleting)
-  const handleDelete = async (movie) =>{
-    const result = await moviesApi.deleteMovie(movie)
-    if(!result.ok) return alert('Is not working!' + result )
-    getMoviesApi.request()
-  } 
+    const handleDelete = async (movie) =>{
+        const result = await moviesApi.deleteMovie(movie)
+        if(!result.ok) return alert('Is not working!' + result )
+        getMoviesApi.request()
+    } 
 
     // rating button function
     const handleSubmit = async () =>{
@@ -73,14 +73,10 @@ export default function DetailsScreen({ navigation, route}) {
             <Animated.ScrollView
                 style={{ 
                     flex: 1, 
-                    backgroundColor: colors.white, 
-                    marginTop: scrollMargin,
-                    borderTopLeftRadius: 50, 
-                    borderTopRightRadius: 50,
-                    zIndex: 999, 
+                    backgroundColor: colors.white,
                 }}
                 contentContainerStyle={{
-                    paddingTop: 40,
+                    paddingTop: HEADER_HEIGHT + HEADER_HEIGHT * 0.2 + 40,
                     paddingHorizontal: 40
                 }}
                 showsVerticalScrollIndicator={false}
