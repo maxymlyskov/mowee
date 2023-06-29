@@ -2,7 +2,7 @@ import { create } from "apisauce";
 import authStorage from '../auth/storage'
 
 const apiClient = create({
-  baseURL: "https://sheltered-ridge-77911.herokuapp.com/api",
+  baseURL: "https://old-mowee.onrender.com/api",
 });
 
 apiClient.addAsyncRequestTransform(async(request)=>{
